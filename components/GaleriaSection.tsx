@@ -31,8 +31,10 @@ export default async function GaleriaSection() {
       </div>
 
       <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3">
-        {fotosGaleria.map((foto) => (
-          <div key={foto.src} className="relative aspect-square overflow-hidden rounded-2xl">
+        {fotosGaleria.map((foto, i) => (
+          // La key combina src + índice: en Sanity se puede cargar la misma
+          // imagen en dos slots de la galería, así que src sola no es única.
+          <div key={`${foto.src}-${i}`} className="relative aspect-square overflow-hidden rounded-2xl">
             <Image
               src={foto.src}
               alt={foto.alt}
