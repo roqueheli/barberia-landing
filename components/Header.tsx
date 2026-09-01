@@ -39,7 +39,7 @@ export default function Header({ logo }: { logo: Logo }) {
           : "border-transparent bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <Link href="/#inicio" className="flex items-center" aria-label={siteConfig.nombreCorto}>
           {logo.url ? (
             logo.enVivo ? (
@@ -47,16 +47,16 @@ export default function Header({ logo }: { logo: Logo }) {
               <img
                 src={logo.url}
                 alt={logo.alt ?? siteConfig.nombreCorto}
-                className="h-20 w-auto object-contain sm:h-24"
+                className="h-12 w-auto object-contain sm:h-14"
               />
             ) : (
               <Image
                 src={logo.url}
                 alt={logo.alt ?? siteConfig.nombreCorto}
-                width={320}
-                height={96}
+                width={224}
+                height={56}
                 priority
-                className="h-20 w-auto object-contain sm:h-24"
+                className="h-12 w-auto object-contain sm:h-14"
               />
             )
           ) : (

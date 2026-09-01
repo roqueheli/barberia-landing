@@ -24,15 +24,15 @@ export default async function Footer() {
                 <img
                   src={logo.url}
                   alt={logo.alt ?? siteConfig.nombreCorto}
-                  className="h-16 w-auto object-contain"
+                  className="h-12 w-auto object-contain"
                 />
               ) : (
                 <Image
                   src={logo.url}
                   alt={logo.alt ?? siteConfig.nombreCorto}
-                  width={256}
-                  height={64}
-                  className="h-16 w-auto object-contain"
+                  width={192}
+                  height={48}
+                  className="h-12 w-auto object-contain"
                 />
               )
             ) : (
