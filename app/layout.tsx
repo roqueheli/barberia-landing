@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
+import { Poppins, Geist_Mono, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/data/site";
 
-const geistSans = Geist({
+// Cuerpo: Poppins (sans suave y moderna). Se expone como --font-geist-sans
+// para no tener que renombrar la variable en todo el CSS/tema.
+const geistSans = Poppins({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -15,27 +18,32 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const playfair = Playfair_Display({
+// Títulos: Cormorant Garamond (serif elegante de alto contraste, ideal para
+// un estudio de belleza). Se expone como --font-playfair, la variable que ya
+// usa --font-display en el tema.
+const playfair = Cormorant_Garamond({
   variable: "--font-playfair",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.nombre} — Barbería premium en Santiago`,
+    default: `${siteConfig.nombre} — Estudio de belleza`,
     template: `%s | ${siteConfig.nombre}`,
   },
   description: siteConfig.descripcion,
   keywords: [
-    "barbería",
-    "barbería Santiago",
-    "corte de pelo hombre",
-    "afeitado clásico",
-    "barbería Providencia",
-    "barbería Las Condes",
-    "barbería La Florida",
+    "estudio de belleza",
+    "salón de belleza",
+    "belleza mujer",
+    "manicure",
+    "pedicure",
+    "coloración",
+    "tratamientos capilares",
+    "spa facial",
   ],
   authors: [{ name: siteConfig.nombre }],
   openGraph: {
@@ -43,20 +51,20 @@ export const metadata: Metadata = {
     locale: "es_CL",
     url: siteConfig.url,
     siteName: siteConfig.nombre,
-    title: `${siteConfig.nombre} — Barbería premium en Santiago`,
+    title: `${siteConfig.nombre} — Estudio de belleza`,
     description: siteConfig.descripcion,
     images: [
       {
-        url: "https://picsum.photos/seed/barberia-og/1200/630",
+        url: "https://picsum.photos/seed/estudio-belleza-og/1200/630",
         width: 1200,
         height: 630,
-        alt: `${siteConfig.nombre} — barbería premium`,
+        alt: `${siteConfig.nombre} — estudio de belleza`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteConfig.nombre} — Barbería premium en Santiago`,
+    title: `${siteConfig.nombre} — Estudio de belleza`,
     description: siteConfig.descripcion,
   },
   robots: {
@@ -69,7 +77,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="es"
-      data-theme="dark"
+      data-theme="light"
       className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">

@@ -1,31 +1,33 @@
 @import "tailwindcss";
 
 /*
- * Sistema de variables de tema. El default es oscuro (marca de la casa),
- * pero dejamos las variables separadas de los componentes para poder
- * habilitar un toggle claro/oscuro con solo cambiar `data-theme` en <html>.
+ * Sistema de variables de tema. Paleta del estudio de belleza Génesis Silva:
+ * clara, cálida y femenina — nude/rosa empolvado de fondo, texto berenjena
+ * suave, y acento rosa dorado (mauve). Las variables están separadas de los
+ * componentes para poder alternar tema con `data-theme` en <html>.
  */
 :root,
-[data-theme="dark"] {
-  --color-bg: #08090a;
-  --color-bg-elevated: #0f1012;
-  --color-fg: #f5f4f2;
-  --color-fg-muted: #a3a29e;
-  --color-border: rgba(255, 255, 255, 0.1);
-  --color-accent: #d4a24e;
-  --color-accent-strong: #f0be6a;
-  --color-accent-fg: #171009;
+[data-theme="light"] {
+  --color-bg: #fdf7f4;
+  --color-bg-elevated: #ffffff;
+  --color-fg: #3d2b32;
+  --color-fg-muted: #8a6f78;
+  --color-border: rgba(61, 43, 50, 0.12);
+  --color-accent: #c48b9f;
+  --color-accent-strong: #a86a80;
+  --color-accent-fg: #ffffff;
 }
 
-[data-theme="light"] {
-  --color-bg: #faf9f7;
-  --color-bg-elevated: #ffffff;
-  --color-fg: #17181a;
-  --color-fg-muted: #55534d;
-  --color-border: rgba(0, 0, 0, 0.1);
-  --color-accent: #b3812c;
-  --color-accent-strong: #96691e;
-  --color-accent-fg: #ffffff;
+/* Variante oscura opcional, en tonos berenjena/rosa para mantener la marca. */
+[data-theme="dark"] {
+  --color-bg: #1c1418;
+  --color-bg-elevated: #261b21;
+  --color-fg: #f7edf0;
+  --color-fg-muted: #c9adb7;
+  --color-border: rgba(255, 255, 255, 0.12);
+  --color-accent: #d9a3b4;
+  --color-accent-strong: #e8bccb;
+  --color-accent-fg: #2a1a20;
 }
 
 @theme inline {
@@ -44,11 +46,11 @@
 
 html {
   scroll-behavior: smooth;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
-[data-theme="light"] {
-  color-scheme: light;
+[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 body {
@@ -109,4 +111,39 @@ section[id] {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/*
+ * Adaptación de tema claro (estudio de belleza). El diseño original se pensó
+ * "blanco sobre oscuro" con muchas clases fijas (text-white, text-neutral-*,
+ * bg-white/*, border-white/*). En vez de reescribir esas clases en decenas de
+ * componentes, se remapean acá bajo el tema claro a la paleta femenina:
+ * texto berenjena sobre fondo nude, superficies y bordes con un tinte del
+ * acento rosa. Si algún día se vuelve al tema oscuro, basta cambiar
+ * data-theme y estos overrides dejan de aplicar.
+ */
+[data-theme="light"] {
+  /* Texto: blanco/gris claro -> berenjena y tonos muted cálidos */
+  .text-white { color: var(--color-fg) !important; }
+  .text-neutral-100,
+  .text-neutral-200,
+  .text-neutral-300 { color: var(--color-fg) !important; }
+  .text-neutral-400,
+  .text-neutral-500,
+  .text-neutral-600 { color: var(--color-fg-muted) !important; }
+
+  /* Superficies translúcidas claras -> tinte rosa muy sutil del acento */
+  .bg-white\/5 { background-color: rgba(196, 139, 159, 0.08) !important; }
+  .bg-white\/10 { background-color: rgba(196, 139, 159, 0.14) !important; }
+  .hover\:bg-white\/5:hover { background-color: rgba(196, 139, 159, 0.08) !important; }
+  .hover\:bg-white\/10:hover { background-color: rgba(196, 139, 159, 0.14) !important; }
+
+  /* Bordes claros -> borde del tema (berenjena translúcido) */
+  .border-white\/5,
+  .border-white\/10,
+  .border-white\/15,
+  .border-white\/20 { border-color: var(--color-border) !important; }
+
+  /* Sombras negras muy marcadas -> sombra rosa suave */
+  .hover\:shadow-black\/30:hover { --tw-shadow-color: rgba(168, 106, 128, 0.18) !important; }
 }
