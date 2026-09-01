@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+/*
+ * Sistema de variables de tema. El default es oscuro (marca de la casa),
+ * pero dejamos las variables separadas de los componentes para poder
+ * habilitar un toggle claro/oscuro con solo cambiar `data-theme` en <html>.
+ */
+:root,
+[data-theme="dark"] {
+  --color-bg: #08090a;
+  --color-bg-elevated: #0f1012;
+  --color-fg: #f5f4f2;
+  --color-fg-muted: #a3a29e;
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-accent: #d4a24e;
+  --color-accent-strong: #f0be6a;
+  --color-accent-fg: #171009;
+}
+
+[data-theme="light"] {
+  --color-bg: #faf9f7;
+  --color-bg-elevated: #ffffff;
+  --color-fg: #17181a;
+  --color-fg-muted: #55534d;
+  --color-border: rgba(0, 0, 0, 0.1);
+  --color-accent: #b3812c;
+  --color-accent-strong: #96691e;
+  --color-accent-fg: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--color-bg);
+  --color-background-elevated: var(--color-bg-elevated);
+  --color-foreground: var(--color-fg);
+  --color-foreground-muted: var(--color-fg-muted);
+  --color-accent: var(--color-accent);
+  --color-accent-strong: var(--color-accent-strong);
+  --color-accent-foreground: var(--color-accent-fg);
+  --color-border: var(--color-border);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-playfair);
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Anclas de sección: compensan el header sticky para que el título no quede tapado */
+section[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Utilidad simple para "line-clamp" sin plugin adicional */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
