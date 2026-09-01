@@ -25,3 +25,9 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+// Inicializa los bindings de Cloudflare en `next dev` para que
+// getCloudflareContext funcione en local igual que en producción. Solo corre
+// en desarrollo; no afecta el build de producción. (Adaptador OpenNext.)
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+initOpenNextCloudflareForDev();
