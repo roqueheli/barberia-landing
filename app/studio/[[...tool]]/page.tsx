@@ -1,13 +1,18 @@
-"use client";
+import { notFound } from "next/navigation";
+import StudioGate from "./StudioGate";
 
-import { NextStudio } from "next-sanity/studio";
-import config from "@/sanity.config";
-
-// Fuera del route group app/(site), así que solo hereda el layout raíz
-// mínimo (html/body/fuentes) — nunca el header/footer/BookingProvider del
-// sitio de marketing, que romperían el viewport de Sanity Studio.
-export const dynamic = "force-static";
+// Sanity Studio (paquete `sanity`, ~20 MB) NO se puede bundlear en un
+// Cloudflare Worker: excede el límite de tamaño del Worker. Por eso el Studio
+// solo se habilita cuando NEXT_PUBLIC_ENABLE_STUDIO === "true" (desarrollo
+// local o un deploy sin esa restricción). En producción en Cloudflare la ruta
+// responde 404 y el paquete pesado se carga solo bajo demanda (next/dynamic
+// con ssr:false dentro de StudioGate), no en el bundle del servidor.
+//
+// Para editar contenido: correr en local (`npm run dev` -> /studio) o alojar
+// el Studio aparte en sanity.studio (hosting gratuito de Sanity).
+const STUDIO_ENABLED = process.env.NEXT_PUBLIC_ENABLE_STUDIO === "true";
 
 export default function StudioPage() {
-  return <NextStudio config={config} />;
+  if (!STUDIO_ENABLED) notFound();
+  return <StudioGate />;
 }
