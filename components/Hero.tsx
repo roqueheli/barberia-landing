@@ -8,11 +8,11 @@ import { mergeSucursales, mergeEquipo, aggregateBranchRatings } from "@/lib/orga
 import { getSiteContent } from "@/lib/sanity/site-content";
 import type { StatItem } from "@/types";
 
-const DEFAULT_HERO_IMAGE = "https://picsum.photos/seed/barberia-hero/2000/1250";
-const DEFAULT_HERO_TITLE_MAIN = "Barbería con estándar de";
-const DEFAULT_HERO_TITLE_ACCENT = "servicio 5 estrellas";
+const DEFAULT_HERO_IMAGE = "https://picsum.photos/seed/estudio-belleza-hero/2000/1250";
+const DEFAULT_HERO_TITLE_MAIN = "Belleza y cuidado con";
+const DEFAULT_HERO_TITLE_ACCENT = "atención personalizada";
 const DEFAULT_HERO_SUBTITLE =
-  "Reserva tu hora exacta, sin esperas ni apuros. Cortes, afeitados a navaja y cuidado facial en un ambiente pensado para que te relajes de verdad.";
+  "Reserva tu hora exacta, sin esperas ni apuros. Uñas, color, tratamientos capilares y faciales en un espacio cálido pensado para que te relajes de verdad.";
 const DEFAULT_HERO_PRIMARY_CTA = "Reservar hora";
 const DEFAULT_HERO_SECONDARY_CTA = "Ver servicios y precios";
 
@@ -59,7 +59,7 @@ export default async function Hero() {
   const heroImage = siteContent?.heroImage ?? DEFAULT_HERO_IMAGE;
   const heroImageAlt =
     siteContent?.heroImageAlt ||
-    `Interior del salón ${siteConfig.nombreCorto} con sillas de barbero de cuero, iluminación cálida y detalles en madera y cobre`;
+    `Interior del ${siteConfig.nombreCorto}, un estudio de belleza con iluminación cálida y ambiente acogedor`;
   const heroTitleMain = siteContent?.heroTitleMain || DEFAULT_HERO_TITLE_MAIN;
   const heroTitleAccent = siteContent?.heroTitleAccent || DEFAULT_HERO_TITLE_ACCENT;
   const heroSubtitle = siteContent?.heroSubtitle || DEFAULT_HERO_SUBTITLE;

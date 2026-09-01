@@ -44,8 +44,8 @@ export default async function SucursalesSection() {
           {tituloSucursales(sucursalesView.length)}
         </h2>
         <p className="mt-4 text-lg text-neutral-400">
-          Elige la sucursal más cercana a ti. Todas comparten el mismo protocolo de servicio y
-          equipo de barberos certificados.
+          Visítanos en nuestro estudio. El mismo estándar de servicio y un equipo de
+          especialistas dedicadas a tu cuidado.
         </p>
       </div>
 

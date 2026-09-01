@@ -3,7 +3,7 @@ import { buildWhatsAppLink, mensajeReservaGenerico } from "@/lib/whatsapp";
 import ReservarButton from "@/components/ReservarButton";
 import { getSiteContent } from "@/lib/sanity/site-content";
 
-const DEFAULT_CTA_FINAL_TITLE = "Tu próximo corte, en menos de 30 segundos";
+const DEFAULT_CTA_FINAL_TITLE = "Tu próxima hora, en menos de 30 segundos";
 const DEFAULT_CTA_FINAL_DESCRIPTION =
   "Reserva tu hora online o escríbenos directo por WhatsApp. Te confirmamos al instante.";
 const DEFAULT_CTA_FINAL_PRIMARY_CTA = "Reservar hora";

@@ -6,9 +6,9 @@ import { mergeEquipo } from "@/lib/organization-content";
 import { getSiteContent } from "@/lib/sanity/site-content";
 
 const DEFAULT_EQUIPO_EYEBROW = "Equipo";
-const DEFAULT_EQUIPO_TITLE = "Manos con oficio";
+const DEFAULT_EQUIPO_TITLE = "Nuestro equipo";
 const DEFAULT_EQUIPO_DESCRIPTION =
-  "Barberos certificados, formados internamente bajo un mismo protocolo de servicio.";
+  "Especialistas en belleza dedicadas a realzar tu belleza natural con un trato cercano.";
 
 export default async function EquipoSection() {
   const content = await getOrganizationContent();

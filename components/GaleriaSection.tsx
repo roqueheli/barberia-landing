@@ -3,12 +3,12 @@ import { siteConfig } from "@/data/site";
 import { getSiteContent } from "@/lib/sanity/site-content";
 
 const DEFAULT_FOTOS_GALERIA = [
-  { src: "https://picsum.photos/seed/barberia-galeria-1/800/800", alt: "Barbero terminando un corte con secador y peine" },
-  { src: "https://picsum.photos/seed/barberia-galeria-2/800/800", alt: "Detalle de tijeras y peines profesionales sobre paño" },
-  { src: "https://picsum.photos/seed/barberia-galeria-3/800/800", alt: "Cliente sonriendo frente al espejo tras su corte" },
-  { src: "https://picsum.photos/seed/barberia-galeria-4/800/800", alt: "Barbero aplicando espuma de afeitar con brocha" },
-  { src: "https://picsum.photos/seed/barberia-galeria-5/800/800", alt: `Fachada iluminada de una sucursal ${siteConfig.nombreCorto} de noche` },
-  { src: "https://picsum.photos/seed/barberia-galeria-6/800/800", alt: "Repisa con productos de grooming de la casa" },
+  { src: "https://picsum.photos/seed/estudio-galeria-1/800/800", alt: "Detalle de manicure profesional" },
+  { src: "https://picsum.photos/seed/estudio-galeria-2/800/800", alt: "Aplicación de coloración en cabello" },
+  { src: "https://picsum.photos/seed/estudio-galeria-3/800/800", alt: "Clienta sonriendo tras su servicio de belleza" },
+  { src: "https://picsum.photos/seed/estudio-galeria-4/800/800", alt: "Tratamiento facial en camilla" },
+  { src: "https://picsum.photos/seed/estudio-galeria-5/800/800", alt: `Ambiente cálido del ${siteConfig.nombreCorto}` },
+  { src: "https://picsum.photos/seed/estudio-galeria-6/800/800", alt: "Repisa con productos de belleza profesionales" },
 ];
 const DEFAULT_GALERIA_EYEBROW = "Galería";
 const DEFAULT_GALERIA_TITLE = "El ambiente, en imágenes";

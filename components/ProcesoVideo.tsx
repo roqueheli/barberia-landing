@@ -36,7 +36,7 @@ export default function ProcesoVideo({
         muted
         playsInline
         preload="metadata"
-        aria-label="Video en loop mostrando el ritual de afeitado clásico a navaja"
+        aria-label="Video en loop mostrando la experiencia del estudio de belleza"
         onLoadedMetadata={(e) => {
           const { videoWidth, videoHeight } = e.currentTarget;
           if (videoWidth && videoHeight) {

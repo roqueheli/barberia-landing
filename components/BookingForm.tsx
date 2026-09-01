@@ -228,7 +228,7 @@ export default function BookingForm({
         Agendar cita
       </button>
       <p className="text-center text-xs text-neutral-500">
-        Al confirmar se abrirá WhatsApp con tu solicitud prellenada. Un barbero te responderá para
+        Al confirmar se abrirá WhatsApp con tu solicitud prellenada. Te responderemos para
         confirmar disponibilidad.
       </p>
     </form>

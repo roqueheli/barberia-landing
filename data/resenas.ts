@@ -1,41 +1,44 @@
 import type { Resena } from "@/types";
 import { siteConfig } from "@/data/site";
 
+// Reseñas curadas de respaldo. Si hay GOOGLE_PLACES_API_KEY y Place IDs, se
+// muestran las reales de Google (ver lib/google/reviews.ts); estas son el
+// fallback cuando no hay reseñas en vivo.
 export const resenas: Resena[] = [
   {
     id: "resena-1",
-    nombreCliente: "Rodrigo M.",
-    servicioConsumido: "Afeitado clásico a navaja",
-    sucursal: `${siteConfig.nombreCorto} Vicuña Mackenna`,
+    nombreCliente: "Camila R.",
+    servicioConsumido: "Coloración",
+    sucursal: siteConfig.nombreCorto,
     rating: 5,
     texto:
-      "Entré sin saber qué esperar y salí sintiéndome otra persona. El ritual de las toallas calientes y el masaje final es otro nivel, se nota que lo tienen absolutamente cronometrado.",
+      "Amé cómo quedó mi color, justo lo que buscaba. Me asesoraron con paciencia y el ambiente es súper acogedor. Salí feliz y renovada.",
     fecha: "2026-06-12",
-    foto: "https://picsum.photos/seed/barberia-resena-rodrigo/200/200",
-    fotoAlt: `Foto de perfil de Rodrigo M., cliente de ${siteConfig.nombreCorto} Vicuña Mackenna`,
+    foto: "https://picsum.photos/seed/estudio-resena-camila/200/200",
+    fotoAlt: `Foto de perfil de Camila R., clienta de ${siteConfig.nombreCorto}`,
   },
   {
     id: "resena-2",
-    nombreCliente: "Felipe A.",
-    servicioConsumido: "Combo corte + barba",
-    sucursal: `${siteConfig.nombreCorto} Macul`,
+    nombreCliente: "Valentina A.",
+    servicioConsumido: "Manicure",
+    sucursal: siteConfig.nombreCorto,
     rating: 5,
     texto:
-      "Voy cada tres semanas y siempre me atienden a la hora exacta que reservé. Eso para mí vale más que cualquier otra cosa: cero espera, cero apuro.",
+      "Siempre me atienden a la hora exacta que reservé, cero espera. El trabajo en las uñas es impecable y me dura muchísimo. Mi lugar favorito.",
     fecha: "2026-05-28",
-    foto: "https://picsum.photos/seed/barberia-resena-felipe/200/200",
-    fotoAlt: `Foto de perfil de Felipe A., cliente de ${siteConfig.nombreCorto} Macul`,
+    foto: "https://picsum.photos/seed/estudio-resena-valentina/200/200",
+    fotoAlt: `Foto de perfil de Valentina A., clienta de ${siteConfig.nombreCorto}`,
   },
   {
     id: "resena-3",
-    nombreCliente: "Diego P.",
-    servicioConsumido: "Corte clásico",
-    sucursal: `${siteConfig.nombreCorto} Walker Martínez`,
+    nombreCliente: "Francisca P.",
+    servicioConsumido: "Spa facial",
+    sucursal: siteConfig.nombreCorto,
     rating: 5,
     texto:
-      "Llevé a mi hijo de 6 años y lo trataron increíble, tienen hasta un rincón para que espere entretenido. El corte le quedó perfecto y el precio muy justo.",
+      "El spa facial fue una experiencia increíble, salí con la piel radiante. Se nota el cuidado y la dedicación en cada detalle. Totalmente recomendado.",
     fecha: "2026-07-03",
-    foto: "https://picsum.photos/seed/barberia-resena-diego/200/200",
-    fotoAlt: `Foto de perfil de Diego P., cliente de ${siteConfig.nombreCorto} Walker Martínez`,
+    foto: "https://picsum.photos/seed/estudio-resena-francisca/200/200",
+    fotoAlt: `Foto de perfil de Francisca P., clienta de ${siteConfig.nombreCorto}`,
   },
 ];

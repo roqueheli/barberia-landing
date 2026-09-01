@@ -4,10 +4,10 @@ export const siteConfig = {
   // Al reutilizar esta landing para otro cliente, basta con setear
   // NEXT_PUBLIC_SITE_NAME / NEXT_PUBLIC_SITE_SHORT_NAME en el .env — no hace
   // falta tocar código.
-  nombre: process.env.NEXT_PUBLIC_SITE_NAME || "Better Barber Club",
-  nombreCorto: process.env.NEXT_PUBLIC_SITE_SHORT_NAME || "Better Barber Club",
+  nombre: process.env.NEXT_PUBLIC_SITE_NAME || "Estudio de Belleza Génesis Silva",
+  nombreCorto: process.env.NEXT_PUBLIC_SITE_SHORT_NAME || "Génesis Silva",
   descripcion:
-    "Barbería premium en Santiago con estándar de servicio de hotel 5 estrellas. Reserva tu hora en Providencia, Las Condes o La Florida.",
+    "Estudio de belleza para mujeres: manicure, pedicure, coloración, tratamientos capilares y faciales, en un espacio cálido y personalizado. Reserva tu hora online.",
   url: "https://www.oficio-barberia.cl",
   whatsappGeneral: "56940713421",
   telefonoGeneral: "+56 9 4071 3421",
@@ -19,7 +19,7 @@ export const siteConfig = {
   horarioGeneral: [
     { dias: "Lunes a viernes", horas: "09:00 - 21:00" },
     { dias: "Sábado", horas: "09:00 - 19:00" },
-    { dias: "Domingo", horas: "10:00 - 15:00 (solo La Florida cerrado)" },
+    { dias: "Domingo", horas: "Cerrado" },
   ],
 };
 
@@ -35,48 +35,48 @@ export const navLinks = [
 
 export const stats: StatItem[] = [
   { id: "rating", valor: "4.9/5", etiqueta: "Calificación promedio" },
-  { id: "resenas", valor: "1.000+", etiqueta: "Reseñas verificadas" },
-  { id: "barberos", valor: "18", etiqueta: "Barberos profesionales" },
-  { id: "sucursales", valor: "3", etiqueta: "Sucursales en Santiago" },
+  { id: "resenas", valor: "500+", etiqueta: "Reseñas verificadas" },
+  { id: "barberos", valor: "6", etiqueta: "Especialistas en belleza" },
+  { id: "sucursales", valor: "1", etiqueta: "Estudio en Santiago" },
 ];
 
 export const promo = {
-  titulo: "Martes de estudiante",
+  titulo: "Martes de spa",
   descripcion:
-    "Todos los martes, presentando tu credencial de estudiante vigente, obtienes 20% de descuento en corte clásico en nuestra sucursal Vicuña Mackenna.",
+    "Todos los martes, presentando este anuncio, obtienes 20% de descuento en tu spa facial exprés.",
   descuento: "20% OFF",
-  sucursalSlug: "vicuna-mackenna",
-  condiciones: "Válido solo los martes, presentando credencial de estudiante vigente. No acumulable con otras promociones.",
+  sucursalSlug: "estudio",
+  condiciones: "Válido solo los martes. No acumulable con otras promociones.",
 };
 
 export const experiencia = {
-  titulo: "Una casa, un oficio, un estándar",
+  titulo: "Un espacio pensado para ti",
   parrafos: [
-    `${siteConfig.nombreCorto} nació en 2019 en un local de 40 metros cuadrados en Providencia, con la idea simple de que ir a cortarse el pelo no tenía por qué sentirse apurado ni impersonal. Hoy, siete años después, seguimos cronometrando cada servicio al minuto para que nunca esperes de más ni sientas que te apuran.`,
-    "Cada barbero de la casa pasa por un proceso de formación interno antes de tomar su primera silla, y cada sucursal nueva abre solo cuando podemos garantizar el mismo estándar que el primer local. Eso es lo que llamamos 'servicio de hotel 5 estrellas': previsibilidad, atención al detalle y un ambiente donde te puedes relajar de verdad.",
+    `${siteConfig.nombreCorto} es un estudio de belleza donde cada detalle está pensado para que te sientas cuidada y a gusto. Tomamos el tiempo que cada servicio necesita, con asesoría personalizada y productos profesionales, para que salgas sintiéndote renovada.`,
+    "Nuestro equipo se especializa en realzar tu belleza natural con técnicas actuales y un trato cercano. Reservas online, atención puntual y un ambiente relajado: esa es nuestra manera de entender la belleza.",
   ],
   incluyeTodoServicio: [
     "Diagnóstico y asesoría personalizada antes de empezar",
     "Productos profesionales de grado salón",
-    "Bebida de cortesía (café, agua o cerveza artesanal)",
-    "Toallas calientes en todos los servicios de barba",
-    "Repaso de contornos sin costo adicional los 7 días siguientes",
+    "Bebida de cortesía (café, té o agua)",
+    "Ambiente cálido y relajado",
+    "Reserva online con atención puntual",
   ],
-  imagen: "https://picsum.photos/seed/barberia-nosotros/1200/1400",
-  imagenAlt: `Matías Rojas, fundador de ${siteConfig.nombreCorto}, atendiendo a un cliente en el local original de Providencia`,
+  imagen: "https://picsum.photos/seed/estudio-belleza-nosotros/1200/1400",
+  imagenAlt: `Interior del ${siteConfig.nombreCorto}, un espacio cálido para el cuidado de la belleza`,
 };
 
 export const procesoDemo = {
-  titulo: "El ritual del afeitado clásico, paso a paso",
+  titulo: "Tu experiencia, paso a paso",
   descripcion:
-    "Grabamos el proceso completo de nuestro servicio insignia para que sepas exactamente qué esperar antes de sentarte en la silla.",
+    "Así cuidamos cada detalle de tu visita, desde que llegas hasta que sales sintiéndote renovada.",
   pasos: [
-    "Toallas calientes para abrir el poro y suavizar el vello",
-    "Aplicación de aceite y espuma pre-afeitado",
-    "Afeitado completo a navaja en el sentido del vello",
-    "Toalla fría y masaje facial con bálsamo hidratante",
+    "Recepción y diagnóstico personalizado de lo que buscas",
+    "Preparación con productos profesionales de grado salón",
+    "Realización del servicio con técnicas actuales y precisión",
+    "Toques finales, asesoría de mantención y bebida de cortesía",
   ],
   videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
-  videoPoster: "https://picsum.photos/seed/barberia-video-poster/1200/700",
+  videoPoster: "https://picsum.photos/seed/estudio-belleza-video-poster/1200/700",
   instagramUrl: "https://instagram.com/oficio.barberia",
 };

@@ -1,5 +1,5 @@
 {
-  "name": "better-barber-club",
+  "name": "estudio-genesis-silva",
   "compatibility_date": "2026-08-28",
   "compatibility_flags": ["nodejs_compat"],
   "main": ".open-next/worker.js",
@@ -13,7 +13,7 @@
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
-      "service": "better-barber-club"
+      "service": "estudio-genesis-silva"
     }
   ],
   // Variables de RUNTIME del Worker. Wrangler/OpenNext toman estos `vars` como
@@ -26,12 +26,12 @@
   // maneja aparte como Secret en el panel de Cloudflare (nunca versionada).
   "vars": {
     "KLIPPER_API_BASE_URL": "https://klipperapp-be-6fbfe24ddcb3.herokuapp.com/",
-    "KLIPPER_ORG_SLUG": "better-barber-club",
+    "KLIPPER_ORG_SLUG": "estudio-de-belleza-genesis-silva",
     "KLIPPER_API_TIMEOUT_MS": "8000",
-    "NEXT_PUBLIC_SITE_NAME": "Better Barber Club",
-    "NEXT_PUBLIC_SITE_SHORT_NAME": "Better Barber Club",
+    "NEXT_PUBLIC_SITE_NAME": "Estudio de Belleza Génesis Silva",
+    "NEXT_PUBLIC_SITE_SHORT_NAME": "Génesis Silva",
     "NEXT_PUBLIC_APPOINTMENTS_ENABLED": "true",
-    "NEXT_PUBLIC_SANITY_PROJECT_ID": "s3l1tw2t",
+    "NEXT_PUBLIC_SANITY_PROJECT_ID": "ioae2svw",
     "NEXT_PUBLIC_SANITY_DATASET": "production",
     "NEXT_PUBLIC_SANITY_API_VERSION": "2026-08-30"
   }
