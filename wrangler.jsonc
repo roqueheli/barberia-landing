@@ -15,5 +15,24 @@
       "binding": "WORKER_SELF_REFERENCE",
       "service": "better-barber-club"
     }
-  ]
+  ],
+  // Variables de RUNTIME del Worker. Wrangler/OpenNext toman estos `vars` como
+  // fuente de verdad al desplegar; las variables cargadas solo en el panel de
+  // build NO se propagan al runtime del Worker (por eso process.env.KLIPPER_*
+  // salía undefined y los endpoints devolvían 503 not_configured).
+  //
+  // NINGÚN secreto va acá: base URL y slug son endpoints públicos de Klipper y
+  // las NEXT_PUBLIC_* son públicas por definición. GOOGLE_PLACES_API_KEY se
+  // maneja aparte como Secret en el panel de Cloudflare (nunca versionada).
+  "vars": {
+    "KLIPPER_API_BASE_URL": "https://klipperapp-be-6fbfe24ddcb3.herokuapp.com/",
+    "KLIPPER_ORG_SLUG": "better-barber-club",
+    "KLIPPER_API_TIMEOUT_MS": "8000",
+    "NEXT_PUBLIC_SITE_NAME": "Better Barber Club",
+    "NEXT_PUBLIC_SITE_SHORT_NAME": "Better Barber Club",
+    "NEXT_PUBLIC_APPOINTMENTS_ENABLED": "true",
+    "NEXT_PUBLIC_SANITY_PROJECT_ID": "s3l1tw2t",
+    "NEXT_PUBLIC_SANITY_DATASET": "production",
+    "NEXT_PUBLIC_SANITY_API_VERSION": "2026-08-30"
+  }
 }
