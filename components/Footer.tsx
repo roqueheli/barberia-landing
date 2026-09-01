@@ -97,17 +97,6 @@ export default async function Footer() {
               <li>{siteConfig.telefonoGeneral}</li>
               <li>{siteConfig.email}</li>
             </ul>
-
-            <h3 className="mt-6 text-sm font-semibold uppercase tracking-widest text-neutral-500">
-              Horario general
-            </h3>
-            <ul className="mt-3 flex flex-col gap-1.5 text-sm text-neutral-400">
-              {siteConfig.horarioGeneral.map((h) => (
-                <li key={h.dias}>
-                  {h.dias}: {h.horas}
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
 
