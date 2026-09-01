@@ -9,9 +9,9 @@ export const siteConfig = {
   descripcion:
     "Barbería premium en Santiago con estándar de servicio de hotel 5 estrellas. Reserva tu hora en Providencia, Las Condes o La Florida.",
   url: "https://www.oficio-barberia.cl",
-  whatsappGeneral: "56912345678",
-  telefonoGeneral: "+56 2 2345 6789",
-  email: "hola@oficio-barberia.cl",
+  whatsappGeneral: "56940713421",
+  telefonoGeneral: "+56 9 4071 3421",
+  email: "betterbarberclub1@gmail.com",
   instagram: "https://instagram.com/oficio.barberia",
   facebook: "https://www.facebook.com/profile.php?id=100092622857920",
   tiktok: "https://tiktok.com/@better.barber.club1",

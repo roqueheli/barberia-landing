@@ -10,8 +10,8 @@ const curatedSucursal: Sucursal = {
   direccion: "Dirección curada",
   ciudad: "Santiago",
   region: "Región Metropolitana",
-  telefono: "+56 2 2345 6789",
-  whatsapp: "56912345678",
+  telefono: "+56 9 4071 3421",
+  whatsapp: "56940713421",
   referenciaMetro: "Metro Manuel Montt",
   horario: [{ dias: "Lunes a viernes", horas: "09:30 - 20:30" }],
   rating: 4.9,
@@ -23,7 +23,7 @@ const curatedSucursal: Sucursal = {
   galeria: [],
   geo: { lat: -33.4263, lng: -70.6122 },
   fechaApertura: "2019-03-01",
-  urlReserva: "https://wa.me/56912345678",
+  urlReserva: "https://wa.me/56940713421",
 };
 
 describe("matchByName", () => {
