@@ -23,11 +23,11 @@ const NUMEROS_TEXTO = [
 // "Tres casas, un mismo estándar" con el número real de sucursales que
 // terminan mostrándose (curadas o en vivo) — nunca un conteo fijo.
 function tituloSucursales(cantidad: number): string {
-  if (cantidad === 0) return "Nuestras casas, un mismo estándar";
-  if (cantidad === 1) return "Una casa, un mismo estándar";
+  if (cantidad === 0) return "Siempre el mismo estándar";
+  if (cantidad === 1) return "Una sucursal, un solo estándar";
   const palabra = NUMEROS_TEXTO[cantidad] ?? String(cantidad);
   const capitalizada = palabra.charAt(0).toUpperCase() + palabra.slice(1);
-  return `${capitalizada} casas, un mismo estándar`;
+  return `${capitalizada} sucursales, un mismo estándar`;
 }
 
 export default async function SucursalesSection() {
