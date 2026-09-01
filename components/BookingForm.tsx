@@ -151,7 +151,7 @@ export default function BookingForm({
             required
             value={telefono}
             onChange={(e) => setTelefono(e.target.value)}
-            placeholder="+56 9 1234 5678"
+            placeholder="+56 9 4071 3421"
             className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-neutral-500 outline-none transition focus:border-amber-400/60 focus:ring-2 focus:ring-amber-400/30"
           />
         </div>
