@@ -40,7 +40,7 @@ export default async function SucursalesSection() {
     <section id="sucursales" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
       <div className="mx-auto max-w-2xl text-center">
         <p className="text-sm font-semibold uppercase tracking-widest text-accent">{sucursalesEyebrow}</p>
-        <h2 className="mt-3 font-display text-4xl font-bold text-white sm:text-5xl">
+        <h2 className="mt-3 whitespace-nowrap font-display text-3xl font-bold text-white sm:text-5xl">
           {tituloSucursales(sucursalesView.length)}
         </h2>
         <p className="mt-4 text-lg text-neutral-400">
