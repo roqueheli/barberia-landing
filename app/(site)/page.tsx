@@ -6,7 +6,6 @@ import ServiciosSection from "@/components/ServiciosSection";
 import ProcesoSection from "@/components/ProcesoSection";
 import EquipoSection from "@/components/EquipoSection";
 import ResenasSection from "@/components/ResenasSection";
-import PromoBanner from "@/components/PromoBanner";
 import CTAFinal from "@/components/CTAFinal";
 import JsonLd from "@/components/JsonLd";
 import OffersPopupLoader from "@/components/offers/OffersPopupLoader";
@@ -53,7 +52,6 @@ export default async function Home() {
         <ProcesoSection />
         <EquipoSection />
         <ResenasSection />
-        <PromoBanner />
         <GaleriaSection />
         <FAQSection />
         <CTAFinal />
