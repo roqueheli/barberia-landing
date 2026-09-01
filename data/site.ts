@@ -13,8 +13,8 @@ export const siteConfig = {
   telefonoGeneral: "+56 2 2345 6789",
   email: "hola@oficio-barberia.cl",
   instagram: "https://instagram.com/oficio.barberia",
-  facebook: "https://facebook.com/oficio.barberia",
-  tiktok: "https://tiktok.com/@oficio.barberia",
+  facebook: "https://www.facebook.com/profile.php?id=100092622857920",
+  tiktok: "https://tiktok.com/@better.barber.club1",
   fundacion: "2019",
   horarioGeneral: [
     { dias: "Lunes a viernes", horas: "09:00 - 21:00" },
