@@ -103,6 +103,19 @@ describe("mapUsersToAppointmentToPublic", () => {
     ];
     expect(mapUsersToAppointmentToPublic(mixed, undefined, 1).map((p) => p.id)).toEqual([10]);
   });
+
+  it("excluye profesionales de sucursales inactivas cuando se pasa activeBranchIds; conserva los sin sucursal fija", () => {
+    // Solo la sucursal 34 está activa (la 1 quedó inactiva). El agente de la
+    // sucursal 1 se excluye; el de la 34 y el dueño (branch_id null) quedan.
+    const result = mapUsersToAppointmentToPublic(users, undefined, undefined, [34]);
+    expect(result.map((p) => p.id)).toEqual([1, 3]);
+  });
+
+  it("sin activeBranchIds no filtra por sucursal activa (comportamiento previo)", () => {
+    expect(mapUsersToAppointmentToPublic(users, undefined, undefined, undefined).map((p) => p.id)).toEqual([
+      1, 2, 3,
+    ]);
+  });
 });
 
 describe("mapMarketingBranch", () => {

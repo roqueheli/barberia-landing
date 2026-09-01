@@ -152,14 +152,22 @@ export function mapAppointmentDataToPublic(
 export function mapUsersToAppointmentToPublic(
   data: KlipperUsersToAppointmentResponse,
   branchId?: number,
-  organizationId?: number
+  organizationId?: number,
+  // Ids de las sucursales activas. Cuando se pasa, se excluyen los usuarios
+  // asignados a una sucursal inactiva (branch_id no incluido en la lista).
+  // branch_id null (sin sucursal fija, ej. el dueño) se conserva siempre.
+  // Sin este parámetro, un barbero de una sucursal desactivada en Klipper
+  // seguía apareciendo en el equipo.
+  activeBranchIds?: number[]
 ): KlipperProfessionalPublic[] {
+  const activeSet = activeBranchIds != null ? new Set(activeBranchIds) : null;
   return (data ?? [])
     .filter(
       (user) =>
         (organizationId == null || user.organization_id === organizationId) &&
         isBookableKlipperUser(user) &&
-        (branchId == null || user.branch_id == null || user.branch_id === branchId)
+        (branchId == null || user.branch_id == null || user.branch_id === branchId) &&
+        (activeSet == null || user.branch_id == null || activeSet.has(user.branch_id))
     )
     .map(mapUserToPublicProfessional);
 }

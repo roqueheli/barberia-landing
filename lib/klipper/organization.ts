@@ -70,7 +70,11 @@ export const getOrganizationContent = cache(async (): Promise<OrganizationConten
     // endpoint del lado del servidor — ver el comentario en
     // lib/klipper/client.ts:getUsersToAppointment.
     const users = await getUsersToAppointment(slug, organization.id, CACHE_OPTIONS);
-    professionals = mapUsersToAppointmentToPublic(users, undefined, organization.id);
+    // Solo profesionales de sucursales activas (branches ya viene filtrado
+    // por b.active más arriba). Los sin sucursal fija (branch_id null, ej. el
+    // dueño) se conservan igual.
+    const activeBranchIds = branches.map((b) => b.id);
+    professionals = mapUsersToAppointmentToPublic(users, undefined, organization.id, activeBranchIds);
   } catch (err) {
     const message = err instanceof KlipperApiError ? err.message : "unknown error";
     console.error("[klipper/organization] professionals", message);
