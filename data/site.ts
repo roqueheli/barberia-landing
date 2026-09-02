@@ -36,7 +36,7 @@ export const stats: StatItem[] = [
   { id: "rating", valor: "4.9/5", etiqueta: "Calificación promedio" },
   { id: "resenas", valor: "500+", etiqueta: "Reseñas verificadas" },
   { id: "barberos", valor: "6", etiqueta: "Especialistas en belleza" },
-  { id: "sucursales", valor: "1", etiqueta: "Estudio en Santiago" },
+  { id: "sucursales", valor: "1", etiqueta: "Estudio en Los Angeles" },
 ];
 
 export const promo = {
