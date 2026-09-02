@@ -90,12 +90,12 @@ export default async function Hero() {
           texto sin depender de qué haya en la imagen. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-r from-black from-25% via-black/70 via-60% to-black/20"
+        className="absolute inset-0 bg-gradient-to-r from-black/85 from-5% via-black/45 via-55% to-transparent"
       />
       {/* Refuerzo vertical: oscurece la franja inferior (stats) y la superior. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/40"
+        className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/30"
       />
 
       <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 pb-16 pt-40 sm:px-6 sm:pb-20 lg:px-8">
