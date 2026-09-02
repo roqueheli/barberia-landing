@@ -84,13 +84,19 @@ export default async function Hero() {
         sizes="100vw"
         className="object-cover"
       />
+      {/* Capa base uniforme: garantiza un mínimo de oscurecido sobre toda la
+          foto para que el texto sea legible aunque la imagen tenga zonas
+          claras o reflejos detrás del título. */}
+      <div aria-hidden="true" className="absolute inset-0 bg-black/45" />
+      {/* Refuerzo vertical (más oscuro abajo, donde están las stats) y
+          horizontal (cubre la columna izquierda del texto, no solo el borde). */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30"
+        className="absolute inset-0 bg-gradient-to-t from-black via-black/75 to-black/45"
       />
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent"
+        className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"
       />
 
       <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 pb-16 pt-40 sm:px-6 sm:pb-20 lg:px-8">
@@ -101,12 +107,14 @@ export default async function Hero() {
             </span>
           )}
 
-          <h1 className="mt-6 font-display text-5xl font-bold leading-[1.05] text-white sm:text-6xl lg:text-7xl">
+          <h1 className="mt-6 font-display text-5xl font-bold leading-[1.05] text-white [text-shadow:0_2px_16px_rgba(0,0,0,0.6)] sm:text-6xl lg:text-7xl">
             {heroTitleMain}{" "}
             <span className="text-accent">{heroTitleAccent}</span>
           </h1>
 
-          <p className="mt-6 max-w-xl text-lg text-neutral-200 sm:text-xl">{heroSubtitle}</p>
+          <p className="mt-6 max-w-xl text-lg text-neutral-100 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)] sm:text-xl">
+            {heroSubtitle}
+          </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <ReservarButton
