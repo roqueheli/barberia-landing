@@ -316,6 +316,7 @@ describe("mergeServicios", () => {
       description: null,
       photoUrl: null,
       priceWithOffer: null,
+      businessTypeId: null,
     };
     const [result] = mergeServicios([service], [curatedServicio]);
 
@@ -340,6 +341,7 @@ describe("mergeServicios", () => {
       description: "Descripción real de Klipper",
       photoUrl: "https://cdn.jsdelivr.net/gh/example/servicio-nuevo.jpg",
       priceWithOffer: null,
+      businessTypeId: null,
     };
     const [result] = mergeServicios([service], [curatedServicio]);
 

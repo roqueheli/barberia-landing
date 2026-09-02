@@ -33,7 +33,11 @@ export default async function ServiciosSection() {
         <p className="mt-4 text-lg text-neutral-400">{serviciosDescription}</p>
       </div>
 
-      <ServiciosPaginados servicios={serviciosView} porPagina={9} />
+      <ServiciosPaginados
+        servicios={serviciosView}
+        businessTypes={content?.businessTypes ?? []}
+        porPagina={9}
+      />
 
       {serviciosView.length === 0 && (
         <p className="mt-12 text-center text-neutral-400">

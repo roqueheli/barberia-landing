@@ -7,6 +7,7 @@ import type {
   CreateAppointmentPayload,
   CreateAppointmentResponse,
   KlipperAppointmentDataResponse,
+  KlipperBusinessTypeRaw,
   KlipperLandingResponse,
   KlipperStatus,
   KlipperUserCalendarResponse,
@@ -183,6 +184,24 @@ export async function getOffers(
   }
   const data = await parseJsonSafely<unknown>(res);
   return Array.isArray(data) ? (data as Offer[]) : [];
+}
+
+// GET /business_types?organization_id={id}: catálogo de tipos de negocio de
+// la organización (sin auth). Trae id/name/active; el landing solo entrega el
+// business_type_id por servicio, sin el nombre, así que este endpoint es la
+// forma de resolver etiquetas legibles para el filtro de servicios. Devuelve
+// un array plano.
+export async function getBusinessTypes(
+  organizationId: number,
+  cacheOptions?: KlipperCacheOptions
+): Promise<KlipperBusinessTypeRaw[]> {
+  const search = new URLSearchParams({ organization_id: String(organizationId) });
+  const res = await fetchKlipper(`/api/v1/business_types?${search.toString()}`, undefined, cacheOptions);
+  if (!res.ok) {
+    throw new KlipperApiError(`business_types falló con status ${res.status}`, res.status);
+  }
+  const data = await parseJsonSafely<unknown>(res);
+  return Array.isArray(data) ? (data as KlipperBusinessTypeRaw[]) : [];
 }
 
 export interface UserCalendarParams {

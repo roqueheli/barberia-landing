@@ -209,6 +209,7 @@ describe("mapMarketingService", () => {
       description: "Corte clásico o moderno",
       photoUrl: "https://cdn.jsdelivr.net/gh/example/corte.jpg",
       priceWithOffer: null,
+      businessTypeId: null,
     });
   });
 
@@ -230,6 +231,7 @@ describe("mapMarketingService", () => {
       description: null,
       photoUrl: null,
       priceWithOffer: null,
+      businessTypeId: null,
     });
   });
 });

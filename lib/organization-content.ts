@@ -74,6 +74,8 @@ export interface ServicioView {
   insignia?: boolean;
   sucursalesDisponibles: string[];
   klipperServiceId?: number;
+  /** business_type_id de Klipper (categoría), o null. Para filtrar por tipo. */
+  businessTypeId?: number | null;
   /** Overlay de oferta ya resuelto por Klipper (precio rebajado + metadatos),
    * o null/undefined si el servicio no tiene oferta aplicable. El front solo
    * lo pinta; nunca calcula el descuento. */
@@ -311,6 +313,7 @@ function liveServicioView(service: MarketingService): ServicioView {
     incluye: [],
     sucursalesDisponibles: [],
     klipperServiceId: service.id,
+    businessTypeId: service.businessTypeId,
     priceWithOffer: service.priceWithOffer,
     enVivo: true,
   };

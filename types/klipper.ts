@@ -290,6 +290,26 @@ export interface MarketingService {
   /** Overlay de oferta ya resuelto por el backend (precio rebajado + metadatos)
    * o null si el servicio no tiene oferta aplicable. */
   priceWithOffer: PriceWithOffer | null;
+  /** business_type_id del servicio (categoría de Klipper), o null. Se usa para
+   * filtrar los servicios por tipo en la landing. */
+  businessTypeId: number | null;
+}
+
+// Raw de GET /business_types?organization_id={id}. La organización comparte un
+// catálogo grande de tipos; solo interesan los que realmente usan los
+// servicios de este negocio.
+export interface KlipperBusinessTypeRaw {
+  id: number;
+  name: string;
+  active: boolean;
+  description?: string | null;
+  [key: string]: unknown;
+}
+
+// DTO liviano para el filtro de servicios en la landing.
+export interface BusinessType {
+  id: number;
+  name: string;
 }
 
 export interface BookingOrganization {

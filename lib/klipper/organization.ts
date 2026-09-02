@@ -7,11 +7,12 @@
 import "server-only";
 import { cache } from "react";
 
-import { getLanding, getUsersToAppointment } from "./client";
+import { getBusinessTypes, getLanding, getUsersToAppointment } from "./client";
 import { mapMarketingBranch, mapMarketingService, mapUsersToAppointmentToPublic } from "./mappers";
 import { KlipperApiError } from "./errors";
 import type {
   BookingOrganization,
+  BusinessType,
   KlipperProfessionalPublic,
   MarketingBranch,
   MarketingService,
@@ -22,6 +23,10 @@ export interface OrganizationContent {
   branches: MarketingBranch[];
   services: MarketingService[];
   professionals: KlipperProfessionalPublic[];
+  /** Tipos de negocio (id+name) que realmente usan los servicios activos —
+   * para el filtro de servicios en la landing. Solo los referenciados por
+   * algún servicio, ordenados por nombre. */
+  businessTypes: BusinessType[];
   /** logo_url/instagram en vivo de metadata.media_configs — separados de
    * BookingOrganization (deliberadamente mínimo, solo lo que el wizard de
    * reserva necesita) porque son campos puramente de marketing. */
@@ -80,11 +85,32 @@ export const getOrganizationContent = cache(async (): Promise<OrganizationConten
     console.error("[klipper/organization] professionals", message);
   }
 
+  let businessTypes: BusinessType[] = [];
+  try {
+    // Los servicios solo traen business_type_id (sin nombre). Este endpoint
+    // resuelve los nombres. La organización comparte un catálogo grande de
+    // tipos, así que se reduce a los que realmente usa algún servicio activo.
+    const usedIds = new Set(
+      services.map((s) => s.businessTypeId).filter((id): id is number => id != null)
+    );
+    if (usedIds.size > 0) {
+      const raw = await getBusinessTypes(organization.id, CACHE_OPTIONS);
+      businessTypes = raw
+        .filter((bt) => bt.active !== false && usedIds.has(bt.id))
+        .map((bt) => ({ id: bt.id, name: bt.name }))
+        .sort((a, b) => a.name.localeCompare(b.name, "es"));
+    }
+  } catch (err) {
+    const message = err instanceof KlipperApiError ? err.message : "unknown error";
+    console.error("[klipper/organization] business_types", message);
+  }
+
   return {
     organization,
     branches,
     services,
     professionals,
+    businessTypes,
     organizationLogoUrl,
     organizationInstagramHandle,
   };

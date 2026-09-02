@@ -113,6 +113,7 @@ export function mapMarketingService(service: KlipperService): MarketingService {
     photoUrl: nonEmpty(service.photo_url),
     // Overlay de oferta tal cual lo entrega el backend (precio ya rebajado).
     priceWithOffer: service.price_with_offer ?? null,
+    businessTypeId: service.business_type_id ?? null,
   };
 }
 
