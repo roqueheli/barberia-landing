@@ -47,16 +47,16 @@ export default function Header({ logo }: { logo: Logo }) {
               <img
                 src={logo.url}
                 alt={logo.alt ?? siteConfig.nombreCorto}
-                className="h-10 w-auto object-contain sm:h-11"
+                className="h-14 w-auto object-contain sm:h-16"
               />
             ) : (
               <Image
                 src={logo.url}
                 alt={logo.alt ?? siteConfig.nombreCorto}
-                width={176}
-                height={44}
+                width={256}
+                height={64}
                 priority
-                className="h-10 w-auto object-contain sm:h-11"
+                className="h-14 w-auto object-contain sm:h-16"
               />
             )
           ) : (
