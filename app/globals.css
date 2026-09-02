@@ -1,33 +1,33 @@
 @import "tailwindcss";
 
 /*
- * Sistema de variables de tema. Paleta del estudio de belleza Génesis Silva:
- * clara, cálida y femenina — nude/rosa empolvado de fondo, texto berenjena
- * suave, y acento rosa dorado (mauve). Las variables están separadas de los
+ * Sistema de variables de tema. Paleta del estudio Génesis Silva: elegante y
+ * sobria — marfil/blanco de fondo, texto gris carbón/negro, y dorado como
+ * acento (marca del logo GS). Las variables están separadas de los
  * componentes para poder alternar tema con `data-theme` en <html>.
  */
 :root,
 [data-theme="light"] {
-  --color-bg: #fdf7f4;
+  --color-bg: #f8f6f1;
   --color-bg-elevated: #ffffff;
-  --color-fg: #3d2b32;
-  --color-fg-muted: #8a6f78;
-  --color-border: rgba(61, 43, 50, 0.12);
-  --color-accent: #c48b9f;
-  --color-accent-strong: #a86a80;
-  --color-accent-fg: #ffffff;
+  --color-fg: #1f1d1a;
+  --color-fg-muted: #6b6862;
+  --color-border: rgba(31, 29, 26, 0.12);
+  --color-accent: #c8a24c;
+  --color-accent-strong: #a9863a;
+  --color-accent-fg: #1a1613;
 }
 
-/* Variante oscura opcional, en tonos berenjena/rosa para mantener la marca. */
+/* Variante oscura opcional, negro con acento dorado para mantener la marca. */
 [data-theme="dark"] {
-  --color-bg: #1c1418;
-  --color-bg-elevated: #261b21;
-  --color-fg: #f7edf0;
-  --color-fg-muted: #c9adb7;
+  --color-bg: #121110;
+  --color-bg-elevated: #1c1a17;
+  --color-fg: #f5f3ee;
+  --color-fg-muted: #a8a49b;
   --color-border: rgba(255, 255, 255, 0.12);
-  --color-accent: #d9a3b4;
-  --color-accent-strong: #e8bccb;
-  --color-accent-fg: #2a1a20;
+  --color-accent: #d4af5e;
+  --color-accent-strong: #e5c479;
+  --color-accent-fg: #1a1613;
 }
 
 @theme inline {
@@ -132,11 +132,11 @@ section[id] {
   .text-neutral-500,
   .text-neutral-600 { color: var(--color-fg-muted) !important; }
 
-  /* Superficies translúcidas claras -> tinte rosa muy sutil del acento */
-  .bg-white\/5 { background-color: rgba(196, 139, 159, 0.08) !important; }
-  .bg-white\/10 { background-color: rgba(196, 139, 159, 0.14) !important; }
-  .hover\:bg-white\/5:hover { background-color: rgba(196, 139, 159, 0.08) !important; }
-  .hover\:bg-white\/10:hover { background-color: rgba(196, 139, 159, 0.14) !important; }
+  /* Superficies translúcidas claras -> gris carbón muy sutil (neutro) */
+  .bg-white\/5 { background-color: rgba(31, 29, 26, 0.05) !important; }
+  .bg-white\/10 { background-color: rgba(31, 29, 26, 0.09) !important; }
+  .hover\:bg-white\/5:hover { background-color: rgba(31, 29, 26, 0.05) !important; }
+  .hover\:bg-white\/10:hover { background-color: rgba(31, 29, 26, 0.09) !important; }
 
   /* Bordes claros -> borde del tema (berenjena translúcido) */
   .border-white\/5,
@@ -144,6 +144,6 @@ section[id] {
   .border-white\/15,
   .border-white\/20 { border-color: var(--color-border) !important; }
 
-  /* Sombras negras muy marcadas -> sombra rosa suave */
-  .hover\:shadow-black\/30:hover { --tw-shadow-color: rgba(168, 106, 128, 0.18) !important; }
+  /* Sombras negras muy marcadas -> sombra gris suave */
+  .hover\:shadow-black\/30:hover { --tw-shadow-color: rgba(31, 29, 26, 0.15) !important; }
 }
