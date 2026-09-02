@@ -71,7 +71,7 @@ export default function BookingModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="booking-modal-title"
-        className="max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-3xl border border-white/10 bg-neutral-950 p-6 shadow-2xl motion-safe:animate-[slideUp_0.25s_ease-out] sm:rounded-3xl sm:p-8"
+        className="hero-dark max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-3xl border border-white/10 bg-neutral-950 p-6 shadow-2xl motion-safe:animate-[slideUp_0.25s_ease-out] sm:rounded-3xl sm:p-8"
       >
         <div className="mb-6 flex items-start justify-between gap-4">
           <div>

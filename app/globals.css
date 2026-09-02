@@ -121,10 +121,11 @@ section[id] {
  * paleta marfil/gris/dorado: texto gris carbón sobre fondo marfil, superficies
  * y bordes con tinte gris neutro.
  *
- * EXCEPCIÓN: las secciones .hero-dark conservan su diseño oscuro (foto de
- * fondo con texto blanco), así que los overrides NO aplican ahí — de lo
- * contrario el text-white del hero se volvía gris oscuro e ilegible sobre la
- * foto. Se usa :not(.hero-dark) para excluir esa sección y todo su interior.
+ * EXCEPCIÓN: los contenedores con .hero-dark conservan su diseño oscuro
+ * (fondo oscuro con texto blanco): el hero y el modal de reserva. Los
+ * overrides NO aplican ahí — de lo contrario el text-white se volvía gris
+ * oscuro e ilegible sobre el fondo oscuro. Se usa :not(.hero-dark) para
+ * excluir esos contenedores y todo su interior.
  */
 [data-theme="light"] :not(.hero-dark):not(.hero-dark *) {
   /* Texto: blanco/gris claro -> gris carbón y tonos muted */
