@@ -84,19 +84,18 @@ export default async function Hero() {
         sizes="100vw"
         className="object-cover"
       />
-      {/* Capa base uniforme: garantiza un mínimo de oscurecido sobre toda la
-          foto para que el texto sea legible aunque la imagen tenga zonas
-          claras o reflejos detrás del título. */}
-      <div aria-hidden="true" className="absolute inset-0 bg-black/50" />
-      {/* Refuerzo vertical (más oscuro abajo, donde están las stats) y
-          horizontal (cubre la columna izquierda del texto, no solo el borde). */}
+      {/* Cortina oscura a la IZQUIERDA (donde va todo el texto), sólida en el
+          borde y desvaneciéndose hacia la derecha para dejar ver la foto. Es
+          el enfoque más robusto: garantiza un fondo oscuro consistente bajo el
+          texto sin depender de qué haya en la imagen. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-t from-black via-black/75 to-black/45"
+        className="absolute inset-0 bg-gradient-to-r from-black from-25% via-black/70 via-60% to-black/20"
       />
+      {/* Refuerzo vertical: oscurece la franja inferior (stats) y la superior. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/10"
+        className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/40"
       />
 
       <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 pb-16 pt-40 sm:px-6 sm:pb-20 lg:px-8">
