@@ -7,7 +7,7 @@
 // defecto sin romper el render.
 import "server-only";
 import { cache } from "react";
-import { sanityClient, urlForImage, SANITY_PROJECT_ID } from "./client";
+import { sanityClient, urlForImage } from "./client";
 import type { SiteContent, SiteContentRaw } from "@/types/sanity";
 
 const SITE_CONTENT_QUERY = `*[_type == "siteContent"][0]{
@@ -114,7 +114,10 @@ function mapSiteContent(raw: SiteContentRaw | null): SiteContent {
 }
 
 export const getSiteContent = cache(async (): Promise<SiteContent | null> => {
-  if (!SANITY_PROJECT_ID) return null;
+  // Sin cliente (Sanity no configurado / projectId vacío) se degrada a null y
+  // cada sección cae a su contenido curado. El chequeo sobre sanityClient (no
+  // sobre SANITY_PROJECT_ID) además hace que TS lo estreche a no-null abajo.
+  if (!sanityClient) return null;
 
   try {
     const raw = await sanityClient.fetch<SiteContentRaw | null>(
