@@ -19,7 +19,6 @@ import { getBranding } from "@/lib/branding";
 // Secciones no críticas para el primer render (debajo del pliegue, con
 // contenido pesado en imágenes o interactividad): se cargan diferidas para
 // no bloquear el LCP del hero.
-const GaleriaSection = dynamic(() => import("@/components/GaleriaSection"));
 const FAQSection = dynamic(() => import("@/components/FAQSection"));
 
 // Contenido de sucursales/servicios/equipo depende de datos en vivo de
@@ -52,7 +51,6 @@ export default async function Home() {
         <ProcesoSection />
         <EquipoSection />
         <ResenasSection />
-        <GaleriaSection />
         <FAQSection />
         <CTAFinal />
       </main>
