@@ -114,36 +114,40 @@ section[id] {
 }
 
 /*
- * Adaptación de tema claro (estudio de belleza). El diseño original se pensó
- * "blanco sobre oscuro" con muchas clases fijas (text-white, text-neutral-*,
- * bg-white/*, border-white/*). En vez de reescribir esas clases en decenas de
- * componentes, se remapean acá bajo el tema claro a la paleta femenina:
- * texto berenjena sobre fondo nude, superficies y bordes con un tinte del
- * acento rosa. Si algún día se vuelve al tema oscuro, basta cambiar
- * data-theme y estos overrides dejan de aplicar.
+ * Adaptación de tema claro (estudio Génesis Silva). El diseño original se
+ * pensó "blanco sobre oscuro" con muchas clases fijas (text-white,
+ * text-neutral-*, bg-white/*, border-white/*). En vez de reescribir esas
+ * clases en decenas de componentes, se remapean acá bajo el tema claro a la
+ * paleta marfil/gris/dorado: texto gris carbón sobre fondo marfil, superficies
+ * y bordes con tinte gris neutro.
+ *
+ * EXCEPCIÓN: las secciones .hero-dark conservan su diseño oscuro (foto de
+ * fondo con texto blanco), así que los overrides NO aplican ahí — de lo
+ * contrario el text-white del hero se volvía gris oscuro e ilegible sobre la
+ * foto. Se usa :not(.hero-dark) para excluir esa sección y todo su interior.
  */
-[data-theme="light"] {
-  /* Texto: blanco/gris claro -> berenjena y tonos muted cálidos */
-  .text-white { color: var(--color-fg) !important; }
-  .text-neutral-100,
-  .text-neutral-200,
-  .text-neutral-300 { color: var(--color-fg) !important; }
-  .text-neutral-400,
-  .text-neutral-500,
-  .text-neutral-600 { color: var(--color-fg-muted) !important; }
+[data-theme="light"] :not(.hero-dark):not(.hero-dark *) {
+  /* Texto: blanco/gris claro -> gris carbón y tonos muted */
+  &.text-white { color: var(--color-fg) !important; }
+  &.text-neutral-100,
+  &.text-neutral-200,
+  &.text-neutral-300 { color: var(--color-fg) !important; }
+  &.text-neutral-400,
+  &.text-neutral-500,
+  &.text-neutral-600 { color: var(--color-fg-muted) !important; }
 
   /* Superficies translúcidas claras -> gris carbón muy sutil (neutro) */
-  .bg-white\/5 { background-color: rgba(31, 29, 26, 0.05) !important; }
-  .bg-white\/10 { background-color: rgba(31, 29, 26, 0.09) !important; }
-  .hover\:bg-white\/5:hover { background-color: rgba(31, 29, 26, 0.05) !important; }
-  .hover\:bg-white\/10:hover { background-color: rgba(31, 29, 26, 0.09) !important; }
+  &.bg-white\/5 { background-color: rgba(31, 29, 26, 0.05) !important; }
+  &.bg-white\/10 { background-color: rgba(31, 29, 26, 0.09) !important; }
+  &.hover\:bg-white\/5:hover { background-color: rgba(31, 29, 26, 0.05) !important; }
+  &.hover\:bg-white\/10:hover { background-color: rgba(31, 29, 26, 0.09) !important; }
 
-  /* Bordes claros -> borde del tema (berenjena translúcido) */
-  .border-white\/5,
-  .border-white\/10,
-  .border-white\/15,
-  .border-white\/20 { border-color: var(--color-border) !important; }
+  /* Bordes claros -> borde del tema (gris translúcido) */
+  &.border-white\/5,
+  &.border-white\/10,
+  &.border-white\/15,
+  &.border-white\/20 { border-color: var(--color-border) !important; }
 
   /* Sombras negras muy marcadas -> sombra gris suave */
-  .hover\:shadow-black\/30:hover { --tw-shadow-color: rgba(31, 29, 26, 0.15) !important; }
+  &.hover\:shadow-black\/30:hover { --tw-shadow-color: rgba(31, 29, 26, 0.15) !important; }
 }

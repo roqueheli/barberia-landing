@@ -75,7 +75,7 @@ export default async function Hero() {
       });
 
   return (
-    <section id="inicio" className="relative flex min-h-[92vh] items-end overflow-hidden">
+    <section id="inicio" className="hero-dark relative flex min-h-[92vh] items-end overflow-hidden">
       <Image
         src={heroImage}
         alt={heroImageAlt}
