@@ -96,7 +96,7 @@ export default async function Hero() {
       />
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"
+        className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/10"
       />
 
       <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 pb-16 pt-40 sm:px-6 sm:pb-20 lg:px-8">
@@ -107,9 +107,11 @@ export default async function Hero() {
             </span>
           )}
 
-          <h1 className="mt-6 font-display text-5xl font-bold leading-[1.05] text-white [text-shadow:0_2px_16px_rgba(0,0,0,0.6)] sm:text-6xl lg:text-7xl">
+          <h1 className="mt-6 font-display text-5xl font-bold leading-[1.05] text-white [text-shadow:0_2px_4px_rgba(0,0,0,0.9),0_4px_24px_rgba(0,0,0,0.7)] sm:text-6xl lg:text-7xl">
             {heroTitleMain}{" "}
-            <span className="text-accent">{heroTitleAccent}</span>
+            <span className="text-accent [text-shadow:0_2px_4px_rgba(0,0,0,0.9),0_4px_24px_rgba(0,0,0,0.7)]">
+              {heroTitleAccent}
+            </span>
           </h1>
 
           <p className="mt-6 max-w-xl text-lg text-neutral-100 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)] sm:text-xl">
@@ -127,7 +129,7 @@ export default async function Hero() {
               href="#servicios"
               data-analytics-event="ver_servicios_click"
               data-analytics-source="hero-secondary"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-4 text-base font-semibold text-white backdrop-blur-sm transition hover:bg-white/10"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/40 bg-black/40 px-7 py-4 text-base font-semibold text-white shadow-lg shadow-black/30 backdrop-blur-md transition hover:border-accent hover:bg-black/60"
             >
               {heroSecondaryCta}
             </a>
