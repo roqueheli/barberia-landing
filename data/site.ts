@@ -29,7 +29,6 @@ export const navLinks = [
   { href: "/#sucursales", label: "Sucursales" },
   { href: "/#equipo", label: "Equipo" },
   { href: "/#nosotros", label: "Nosotros" },
-  { href: "/#blog", label: "Blog" },
   { href: "/#contacto", label: "Contacto" },
 ];
 
