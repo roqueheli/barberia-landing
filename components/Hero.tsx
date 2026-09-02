@@ -87,7 +87,7 @@ export default async function Hero() {
       {/* Capa base uniforme: garantiza un mínimo de oscurecido sobre toda la
           foto para que el texto sea legible aunque la imagen tenga zonas
           claras o reflejos detrás del título. */}
-      <div aria-hidden="true" className="absolute inset-0 bg-black/65" />
+      <div aria-hidden="true" className="absolute inset-0 bg-black/50" />
       {/* Refuerzo vertical (más oscuro abajo, donde están las stats) y
           horizontal (cubre la columna izquierda del texto, no solo el borde). */}
       <div
@@ -114,7 +114,7 @@ export default async function Hero() {
             </span>
           </h1>
 
-          <p className="mt-6 max-w-xl text-lg text-neutral-100 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)] sm:text-xl">
+          <p className="mt-6 max-w-xl text-lg text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.9),0_2px_14px_rgba(0,0,0,0.7)] sm:text-xl">
             {heroSubtitle}
           </p>
 
@@ -140,10 +140,10 @@ export default async function Hero() {
           {heroStats.map((stat, i) => (
             <div key={`${stat.etiqueta}-${i}`}>
               <dt className="sr-only">{stat.etiqueta}</dt>
-              <dd className="font-display text-3xl font-bold text-white [text-shadow:0_1px_8px_rgba(0,0,0,0.7)] sm:text-4xl">
+              <dd className="font-display text-3xl font-bold text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.9),0_2px_12px_rgba(0,0,0,0.7)] sm:text-4xl">
                 {stat.valor}
               </dd>
-              <p className="mt-1 text-sm text-neutral-200 [text-shadow:0_1px_6px_rgba(0,0,0,0.6)]">
+              <p className="mt-1 text-sm text-neutral-100 [text-shadow:0_1px_3px_rgba(0,0,0,0.9)]">
                 {stat.etiqueta}
               </p>
             </div>
