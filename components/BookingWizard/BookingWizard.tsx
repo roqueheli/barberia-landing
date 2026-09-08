@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type {
   BookingAvailability,
+  BookingBranch,
   BookingLanding,
   BookingService,
   CreateAppointmentResponse,
@@ -39,11 +40,15 @@ function matchesHint(hint: string | undefined, name: string): boolean {
   return name.toLowerCase().includes(normalizedHint);
 }
 
-// El slug de servicio que llega como hint es determinista: `nombre-{id}` (ej.
-// "corte-premium-anti-caida-3287"), con el id numérico de Klipper como último
-// segmento. Ese id es la forma exacta y confiable de resolver el servicio —
-// el match por nombre falla con acentos y con el id pegado al final.
-function serviceIdFromHint(hint: string | undefined): number | null {
+// Los slugs de servicio/sucursal que llegan como hint pueden ser curados
+// (sin id, ej. "vicuna-mackenna") o un fallback generado desde Klipper
+// cuando no hay curación local para ese registro (`nombre-{id}`, ej.
+// "los-carrera-2414" — ver lib/organization-content.ts:uniqueFallbackSlug).
+// El id numérico al final, cuando está, es la forma exacta y confiable de
+// resolver el registro: el match por nombre falla con acentos y, para los
+// slugs de fallback, falla directamente porque el nombre nunca contiene su
+// propio id (matchesHint exige que el nombre incluya el hint completo).
+function idFromHint(hint: string | undefined): number | null {
   if (!hint) return null;
   const match = hint.match(/-(\d+)$/);
   if (!match) return null;
@@ -57,12 +62,25 @@ function resolveServiceFromHint(
   services: BookingService[],
   hint: string | undefined
 ): BookingService | undefined {
-  const id = serviceIdFromHint(hint);
+  const id = idFromHint(hint);
   if (id != null) {
     const byId = services.find((s) => s.id === id);
     if (byId) return byId;
   }
   return services.find((s) => matchesHint(hint, s.name));
+}
+
+// Misma lógica que resolveServiceFromHint, para la sucursal.
+function resolveBranchFromHint(
+  branches: BookingBranch[],
+  hint: string | undefined
+): BookingBranch | undefined {
+  const id = idFromHint(hint);
+  if (id != null) {
+    const byId = branches.find((b) => b.id === id);
+    if (byId) return byId;
+  }
+  return branches.find((b) => matchesHint(hint, b.name));
 }
 
 export default function BookingWizard({
@@ -74,6 +92,11 @@ export default function BookingWizard({
 }: BookingWizardProps) {
   const [landing, setLanding] = useState<BookingLanding | null>(null);
   const [landingLoading, setLandingLoading] = useState(true);
+  // true cuando la sucursal llegó preseleccionada desde su propio botón
+  // "Agendar"/"Reservar" (hint): ya se está eligiendo una sucursal
+  // concreta, así que no tiene sentido volver a pedir que la elija de
+  // nuevo — se omite el paso "branch".
+  const [branchLockedFromHint, setBranchLockedFromHint] = useState(false);
   // true cuando el servicio llegó preseleccionado desde una página de
   // servicio (hint): en ese caso no tiene sentido volver a pedir que lo
   // elija, así que se omite el paso "service".
@@ -81,11 +104,11 @@ export default function BookingWizard({
 
   const steps: StepId[] = useMemo(() => {
     const arr: StepId[] = [];
-    if (!status.skipBranchStep) arr.push("branch");
+    if (!status.skipBranchStep && !branchLockedFromHint) arr.push("branch");
     if (!status.skipServiceStep && !serviceLockedFromHint) arr.push("service");
     arr.push("professional", "contact", "confirm");
     return arr;
-  }, [status.skipBranchStep, status.skipServiceStep, serviceLockedFromHint]);
+  }, [status.skipBranchStep, branchLockedFromHint, status.skipServiceStep, serviceLockedFromHint]);
 
   const [stepIndex, setStepIndex] = useState(0);
   const stepId = steps[stepIndex];
@@ -120,8 +143,9 @@ export default function BookingWizard({
           return;
         }
         setLanding(data);
-        const branchMatch = data.branches.find((b) => matchesHint(sucursalHint, b.name));
+        const branchMatch = resolveBranchFromHint(data.branches, sucursalHint);
         setSelectedBranchId((branchMatch ?? data.branches[0]).id);
+        setBranchLockedFromHint(branchMatch != null);
         const serviceMatch = resolveServiceFromHint(data.services, servicioHint);
         setSelectedServiceId((serviceMatch ?? data.services[0]).id);
         // Si el hint resolvió a un servicio real, viene de su página de
