@@ -1,11 +1,13 @@
 import type { BookingService } from "@/types/klipper";
 
-// Klipper representa los precios por sucursal como registros de servicio
-// separados: un servicio "global" con branch_id === null y, opcionalmente,
-// uno o más registros del mismo servicio con branch_id apuntando a una
-// sucursal concreta y su propio precio. Estas utilidades resuelven, para la
-// sucursal elegida en el wizard, qué registro (y por lo tanto qué precio)
-// corresponde mostrar.
+// Klipper puede representar un precio por sucursal de dos formas: (a) un
+// registro de servicio separado con su propio `branch_id` (nunca
+// observado en datos reales — se conserva el manejo por si acaso), o (b)
+// el mecanismo real verificado contra la respuesta de landing_by_slug
+// (org better-barber-club, servicio "Corte de Cabello"): overrides en
+// `branchPrices` sobre el MISMO registro (`price` es el precio base/
+// default). Estas utilidades resuelven, para la sucursal elegida en el
+// wizard, qué precio corresponde mostrar — aplicando ambos mecanismos.
 
 // Clave lógica de un servicio (lo que el cliente percibe como "un servicio",
 // más allá de en qué sucursal esté configurado). Se usa el nombre porque los
@@ -14,11 +16,22 @@ function serviceKey(service: BookingService): string {
   return service.name.trim().toLowerCase();
 }
 
+// Aplica el override de branchPrices correspondiente a `branchId`, si
+// existe. Nunca muta el servicio original.
+function withBranchPrice(service: BookingService, branchId: number | null): BookingService {
+  if (branchId == null) return service;
+  const override = service.branchPrices?.find((bp) => bp.branchId === branchId);
+  if (override == null) return service;
+  return { ...service, price: override.price };
+}
+
 /**
  * Devuelve un único servicio por clave lógica, eligiendo para `branchId` el
- * registro específico de esa sucursal cuando existe y cayendo al global
- * (branch_id === null) en caso contrario. El resultado conserva el orden de
- * primera aparición en `services`.
+ * registro específico de esa sucursal cuando existe (mecanismo por
+ * registro duplicado) y cayendo al global (branch_id === null) en caso
+ * contrario — y aplicando después el override de `branchPrices` de esa
+ * sucursal sobre el registro resuelto (mecanismo real). El resultado
+ * conserva el orden de primera aparición en `services`.
  */
 export function resolveServicesForBranch(
   services: BookingService[],
@@ -45,14 +58,14 @@ export function resolveServicesForBranch(
     }
   }
 
-  return Array.from(byKey.values());
+  return Array.from(byKey.values()).map((service) => withBranchPrice(service, branchId));
 }
 
 /**
  * Resuelve, para la sucursal elegida, el registro de servicio que
  * corresponde al `selectedServiceId` (que puede apuntar al registro global o
- * a uno de otra sucursal). Devuelve el registro específico de la sucursal si
- * existe, o el propio servicio seleccionado como fallback.
+ * a uno de otra sucursal), con el precio de esa sucursal ya aplicado
+ * (branchPrices, o el registro específico por branch_id si existe).
  */
 export function resolveSelectedService(
   services: BookingService[],
@@ -69,5 +82,5 @@ export function resolveSelectedService(
   const branchSpecific = services.find(
     (s) => s.name.trim().toLowerCase() === key && s.branchId === branchId
   );
-  return branchSpecific ?? selected;
+  return withBranchPrice(branchSpecific ?? selected, branchId);
 }

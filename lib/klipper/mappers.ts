@@ -100,6 +100,10 @@ export function mapService(service: KlipperService): BookingService {
     businessTypeId: service.business_type_id ?? null,
     branchId: service.branch_id ?? null,
     priceWithOffer: service.price_with_offer ?? null,
+    branchPrices: (service.branch_prices ?? []).map((bp) => ({
+      branchId: bp.branch_id,
+      price: toNumber(bp.price),
+    })),
   };
 }
 

@@ -267,7 +267,7 @@ describe("mapLandingToBookingLanding", () => {
       { id: 1, name: "Providencia", address: "Av. Providencia 1810", phone: null },
     ]);
     expect(result.services).toEqual([
-      { id: 10, name: "Corte clásico", price: 12000, duration: 40, businessTypeId: null, branchId: null, priceWithOffer: null },
+      { id: 10, name: "Corte clásico", price: 12000, duration: 40, businessTypeId: null, branchId: null, priceWithOffer: null, branchPrices: [] },
     ]);
     expect(result.organization).toEqual({
       id: 42,
@@ -288,8 +288,38 @@ describe("mapLandingToBookingLanding", () => {
     };
     const result = mapLandingToBookingLanding(landing);
     expect(result.services).toEqual([
-      { id: 1, name: "Corte", price: 8000, duration: 30, businessTypeId: null, branchId: null, priceWithOffer: null },
-      { id: 2, name: "Corte", price: 10000, duration: 30, businessTypeId: null, branchId: 10, priceWithOffer: null },
+      { id: 1, name: "Corte", price: 8000, duration: 30, businessTypeId: null, branchId: null, priceWithOffer: null, branchPrices: [] },
+      { id: 2, name: "Corte", price: 10000, duration: 30, businessTypeId: null, branchId: 10, priceWithOffer: null, branchPrices: [] },
+    ]);
+  });
+
+  // Mecanismo real verificado contra Klipper (org better-barber-club,
+  // servicio "Corte de Cabello"): branch_id viene null, el precio por
+  // sucursal se modela como overrides en branch_prices sobre este mismo
+  // registro — no como registros de servicio duplicados.
+  it("coerciona branch_prices (price string a number, branch_id a branchId)", () => {
+    const landing: KlipperLandingResponse = {
+      organization: { id: 1, name: "Org", slug: "org" },
+      branches: [{ id: 10, name: "Sucursal A", active: true }],
+      services: [
+        {
+          id: 1,
+          name: "Corte de Cabello",
+          price: "15000.0",
+          duration: 45,
+          available_online: true,
+          branch_id: null,
+          branch_prices: [
+            { branch_id: 2412, price: "13000.0" },
+            { branch_id: 2411, price: "15000.0" },
+          ],
+        },
+      ],
+    };
+    const result = mapLandingToBookingLanding(landing);
+    expect(result.services[0].branchPrices).toEqual([
+      { branchId: 2412, price: 13000 },
+      { branchId: 2411, price: 15000 },
     ]);
   });
 

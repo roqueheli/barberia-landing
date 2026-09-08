@@ -47,6 +47,38 @@ describe("resolveServicesForBranch", () => {
     const resolved = resolveServicesForBranch(services, 10);
     expect(resolved.map((s) => s.name)).toEqual([" corte ", "Barba"]);
   });
+
+  // Mecanismo real verificado contra Klipper (org better-barber-club,
+  // servicio "Corte de Cabello"): un único registro con branch_id null,
+  // precio base 15000, y branchPrices con overrides por sucursal — no
+  // registros duplicados con su propio branch_id.
+  it("aplica el override de branchPrices de la sucursal elegida sobre el precio base", () => {
+    const services = [
+      svc({
+        id: 1,
+        name: "Corte de Cabello",
+        price: 15000,
+        branchPrices: [
+          { branchId: 2412, price: 13000 },
+          { branchId: 2411, price: 15000 },
+        ],
+      }),
+    ];
+    expect(resolveServicesForBranch(services, 2412)[0]).toMatchObject({ price: 13000 });
+    expect(resolveServicesForBranch(services, 2411)[0]).toMatchObject({ price: 15000 });
+  });
+
+  it("sin override de branchPrices para la sucursal elegida, mantiene el precio base", () => {
+    const services = [
+      svc({
+        id: 1,
+        name: "Corte de Cabello",
+        price: 15000,
+        branchPrices: [{ branchId: 2412, price: 13000 }],
+      }),
+    ];
+    expect(resolveServicesForBranch(services, 999)[0]).toMatchObject({ price: 15000 });
+  });
 });
 
 describe("resolveSelectedService", () => {
@@ -70,5 +102,21 @@ describe("resolveSelectedService", () => {
   it("devuelve undefined si no hay servicio seleccionado o no existe", () => {
     expect(resolveSelectedService(services, null, 10)).toBeUndefined();
     expect(resolveSelectedService(services, 999, 10)).toBeUndefined();
+  });
+
+  it("aplica el override de branchPrices al registro seleccionado", () => {
+    const servicesWithBranchPrices = [
+      svc({
+        id: 1,
+        name: "Corte de Cabello",
+        price: 15000,
+        branchPrices: [
+          { branchId: 2412, price: 13000 },
+          { branchId: 2411, price: 15000 },
+        ],
+      }),
+    ];
+    expect(resolveSelectedService(servicesWithBranchPrices, 1, 2412)).toMatchObject({ price: 13000 });
+    expect(resolveSelectedService(servicesWithBranchPrices, 1, 2411)).toMatchObject({ price: 15000 });
   });
 });

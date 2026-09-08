@@ -107,10 +107,18 @@ export interface KlipperService {
   description?: string | null;
   photo_url?: string | null;
   business_type_id?: number | null;
-  // null = servicio con precio global (sin sucursal fija). Cuando una
-  // organización configura precios por sucursal, aparece un registro de
-  // servicio adicional con branch_id apuntando a la sucursal.
+  // null = servicio con precio global (sin sucursal fija). En teoría
+  // Klipper podría modelar un precio por sucursal como un registro de
+  // servicio adicional con branch_id apuntando a esa sucursal, pero no se
+  // observó ningún caso real así (branch_id vino null en el 100% de los
+  // registros verificados) — el mecanismo real es branch_prices.
   branch_id?: number | null;
+  // Verificado contra la respuesta real de landing_by_slug (org
+  // better-barber-club, servicio "Corte de Cabello"): el precio por
+  // sucursal se modela como overrides sobre ESTE MISMO registro, no como
+  // registros duplicados. `price` a nivel de servicio es el precio base/
+  // default; cuando la sucursal elegida tiene un override acá, ese manda.
+  branch_prices?: { branch_id: number; price: number | string }[] | null;
   // Overlay que el backend agrega cuando hay una oferta aplicable a este
   // servicio: precio ya rebajado + metadatos de la oferta. El front no
   // calcula el descuento, solo lo pinta.
@@ -271,11 +279,15 @@ export interface BookingService {
   /** Overlay de oferta ya resuelto por Klipper (precio rebajado + metadatos)
    * o null. El wizard/tarjetas solo lo pintan. */
   priceWithOffer?: PriceWithOffer | null;
-  // Klipper representa los precios por sucursal como registros de servicio
-  // separados, cada uno con su propio `branch_id` (null = precio global, sin
-  // sucursal fija). El wizard debe resolver, para la sucursal elegida, el
-  // registro con branch_id === selectedBranchId y caer al global si no existe.
+  // Ver comentario de branch_id en KlipperService — se conserva por si algún
+  // registro sí viene con branch_id propio, pero el mecanismo real
+  // verificado es branchPrices.
   branchId?: number | null;
+  // Overrides de precio por sucursal sobre este mismo servicio (ver
+  // branch_prices en KlipperService). El wizard debe resolver, para la
+  // sucursal elegida, el override con branchId === selectedBranchId y caer
+  // al `price` base si no existe uno para esa sucursal.
+  branchPrices?: { branchId: number; price: number }[];
 }
 
 // Igual que BookingService pero con foto/descripción — el wizard de reserva
