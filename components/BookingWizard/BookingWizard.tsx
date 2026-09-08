@@ -10,6 +10,7 @@ import type {
 } from "@/types/klipper";
 import type { StatusApiResponse } from "@/app/api/klipper/status/route";
 import { buildWhatsAppLink, mensajeReservaSucursal, toInternationalPhone } from "@/lib/whatsapp";
+import { normalizeForMatch } from "@/lib/match-by-name";
 import { addDaysIso, toIsoDate } from "./dateUtils";
 import { resolveSelectedService, resolveServicesForBranch } from "./serviceUtils";
 import StepBranch from "./StepBranch";
@@ -34,10 +35,14 @@ interface BookingWizardProps {
 const GENERIC_ERROR_MESSAGE =
   "No pudimos procesar tu reserva, intenta de nuevo o escríbenos por WhatsApp.";
 
+// normalizeForMatch (no un simple .toLowerCase()) para que un hint sin
+// acentos (slug curado, ej. "walker-martinez") sí matchee contra un nombre
+// real con acentos (ej. "Walker Martínez") — sin esto, "martínez".includes
+// ("martinez") da false porque í ≠ i, y el hint nunca resuelve.
 function matchesHint(hint: string | undefined, name: string): boolean {
   if (!hint) return false;
-  const normalizedHint = hint.replace(/-/g, " ").toLowerCase();
-  return name.toLowerCase().includes(normalizedHint);
+  const normalizedHint = normalizeForMatch(hint.replace(/-/g, " "));
+  return normalizeForMatch(name).includes(normalizedHint);
 }
 
 // Los slugs de servicio/sucursal que llegan como hint pueden ser curados
