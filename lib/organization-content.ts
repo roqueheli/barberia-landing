@@ -15,6 +15,7 @@ import { getOrganizationContent } from "./klipper/organization";
 import { toWhatsAppNumber } from "./whatsapp";
 import { matchByName, normalizeForMatch } from "./match-by-name";
 import { weeklyScheduleToHorario } from "./klipper/schedule";
+import { getSanitySucursales } from "./sanity/sucursales";
 
 export interface SucursalView {
   slug: string;
@@ -53,6 +54,12 @@ export interface SucursalView {
    * el contenido de reseñas reales a la Places API de Google (rating y
    * numeroResenas YA vienen de Klipper directo, sin llamar a Google). */
   googlePlaceId?: string;
+  /** URL de agenda externa (ej. Agenda Pro), solo en sucursales creadas en
+   * Sanity sin sucursal real en Klipper detrás (ver
+   * lib/sanity/sucursales.ts). Cuando está presente, el botón "Reservar"
+   * de esta sucursal abre este link en vez del wizard interno — ver
+   * components/SucursalReservarCta.tsx. */
+  agendaUrl?: string;
   enVivo: boolean;
 }
 
@@ -400,15 +407,29 @@ export function mergeEquipo(
   return merged;
 }
 
+// Todas las sucursales a mostrar: Klipper+curado fusionado (mergeSucursales)
+// más las creadas 100% en Sanity (sin sucursal real en Klipper detrás, ver
+// lib/sanity/sucursales.ts) al final de la lista.
+export async function getAllSucursalesView(curated: Sucursal[]): Promise<SucursalView[]> {
+  const content = await getOrganizationContent();
+  const merged = mergeSucursales(content?.branches ?? null, curated);
+  const sanitySucursales = await getSanitySucursales();
+  return [...merged, ...sanitySucursales];
+}
+
 export async function getSucursalView(slug: string, curated: Sucursal[]): Promise<SucursalView | null> {
   const curatedMatch = curated.find((s) => s.slug === slug);
-  if (!curatedMatch) return null;
+  if (curatedMatch) {
+    const content = await getOrganizationContent();
+    if (!content) return curatedSucursalView(curatedMatch);
 
-  const content = await getOrganizationContent();
-  if (!content) return curatedSucursalView(curatedMatch);
+    const liveMatch = matchByName(curatedMatch.nombre, curatedMatch.slug, content.branches);
+    return liveMatch ? mergeOneSucursal(liveMatch, curatedMatch) : curatedSucursalView(curatedMatch);
+  }
 
-  const liveMatch = matchByName(curatedMatch.nombre, curatedMatch.slug, content.branches);
-  return liveMatch ? mergeOneSucursal(liveMatch, curatedMatch) : curatedSucursalView(curatedMatch);
+  // Sin match curado: puede ser una sucursal creada 100% en Sanity.
+  const sanitySucursales = await getSanitySucursales();
+  return sanitySucursales.find((s) => s.slug === slug) ?? null;
 }
 
 export async function getServicioView(slug: string, curated: Servicio[]): Promise<ServicioView | null> {

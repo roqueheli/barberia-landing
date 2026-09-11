@@ -4,10 +4,11 @@ import { MapPin } from "lucide-react";
 import { notFound } from "next/navigation";
 import { sucursales } from "@/data/sucursales";
 import { siteConfig } from "@/data/site";
-import ReservarButton from "@/components/ReservarButton";
+import SucursalReservarCta from "@/components/SucursalReservarCta";
 import JsonLd from "@/components/JsonLd";
 import { buildSucursalJsonLd } from "@/lib/jsonld";
 import { getSucursalView } from "@/lib/organization-content";
+import { getSanitySucursales } from "@/lib/sanity/sucursales";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -16,8 +17,9 @@ interface PageProps {
 // Contenido en vivo de Klipper cacheado 300s (ver lib/klipper/organization.ts).
 export const revalidate = 300;
 
-export function generateStaticParams() {
-  return sucursales.map((s) => ({ slug: s.slug }));
+export async function generateStaticParams() {
+  const sanitySlugs = (await getSanitySucursales()).map((s) => ({ slug: s.slug }));
+  return [...sucursales.map((s) => ({ slug: s.slug })), ...sanitySlugs];
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -174,13 +176,13 @@ export default async function SucursalPage({ params }: PageProps) {
               <p className="mt-2 text-sm text-neutral-300">{sucursal.telefono}</p>
             </div>
 
-            <ReservarButton
-              sucursalSlug={sucursal.slug}
+            <SucursalReservarCta
+              sucursal={sucursal}
               analyticsSource={`sucursal-detail-${sucursal.slug}`}
               className="mt-2 inline-flex items-center justify-center rounded-full bg-accent px-6 py-3.5 text-sm font-semibold text-accent-foreground transition hover:bg-accent-strong"
             >
               Reservar en {sucursal.nombre}
-            </ReservarButton>
+            </SucursalReservarCta>
           </aside>
         </div>
       </section>

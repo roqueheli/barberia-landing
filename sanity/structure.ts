@@ -16,4 +16,7 @@ export const structure: StructureResolver = (S) =>
         .child(
           S.document().schemaType("siteContent").documentId(SITE_CONTENT_DOC_ID)
         ),
+      // Colección normal (no singleton): cada documento es una sucursal
+      // creada fuera de Klipper, con su propio link de agenda externo.
+      S.documentTypeListItem("sucursal").title("Sucursales (fuera de Klipper)"),
     ]);

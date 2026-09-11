@@ -13,7 +13,7 @@ import { buildOrganizationJsonLd, buildSucursalJsonLd } from "@/lib/jsonld";
 import { sucursales } from "@/data/sucursales";
 import { siteConfig } from "@/data/site";
 import { getOrganizationContent } from "@/lib/klipper/organization";
-import { mergeSucursales } from "@/lib/organization-content";
+import { getAllSucursalesView } from "@/lib/organization-content";
 import { getBranding } from "@/lib/branding";
 
 // Secciones no críticas para el primer render (debajo del pliegue, con
@@ -29,7 +29,7 @@ export const revalidate = 300;
 
 export default async function Home() {
   const content = await getOrganizationContent();
-  const sucursalesView = mergeSucursales(content?.branches ?? null, sucursales);
+  const sucursalesView = await getAllSucursalesView(sucursales);
   const { logo, instagramUrl } = await getBranding();
   const organizationName = content?.organization.name ?? siteConfig.nombre;
 

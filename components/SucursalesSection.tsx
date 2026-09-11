@@ -1,7 +1,6 @@
 import { sucursales } from "@/data/sucursales";
 import SucursalesGrid from "@/components/SucursalesGrid";
-import { getOrganizationContent } from "@/lib/klipper/organization";
-import { mergeSucursales } from "@/lib/organization-content";
+import { getAllSucursalesView } from "@/lib/organization-content";
 import { getSiteContent } from "@/lib/sanity/site-content";
 
 const DEFAULT_SUCURSALES_EYEBROW = "Sucursales";
@@ -31,8 +30,7 @@ function tituloSucursales(cantidad: number): string {
 }
 
 export default async function SucursalesSection() {
-  const content = await getOrganizationContent();
-  const sucursalesView = mergeSucursales(content?.branches ?? null, sucursales);
+  const sucursalesView = await getAllSucursalesView(sucursales);
   const siteContent = await getSiteContent();
   const sucursalesEyebrow = siteContent?.sucursalesEyebrow || DEFAULT_SUCURSALES_EYEBROW;
 

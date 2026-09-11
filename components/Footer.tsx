@@ -3,13 +3,13 @@ import Link from "next/link";
 import { siteConfig } from "@/data/site";
 import { sucursales } from "@/data/sucursales";
 import { getOrganizationContent } from "@/lib/klipper/organization";
-import { mergeSucursales, liveServicios } from "@/lib/organization-content";
+import { getAllSucursalesView, liveServicios } from "@/lib/organization-content";
 import { getBranding } from "@/lib/branding";
 
 export default async function Footer() {
   const year = new Date().getFullYear();
   const content = await getOrganizationContent();
-  const sucursalesView = mergeSucursales(content?.branches ?? null, sucursales);
+  const sucursalesView = await getAllSucursalesView(sucursales);
   const serviciosView = liveServicios(content?.services ?? null);
   const { logo, instagramUrl } = await getBranding();
 

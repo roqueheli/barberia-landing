@@ -1,4 +1,4 @@
-import ReservarButton from "@/components/ReservarButton";
+import SucursalReservarCta from "@/components/SucursalReservarCta";
 import type { SucursalView } from "@/lib/organization-content";
 import { MapPin } from "lucide-react";
 import Image from "next/image";
@@ -108,13 +108,13 @@ export default function SucursalCard({ sucursal, onAgendar }: SucursalCardProps)
         </ul>
 
         <div className="mt-auto flex flex-col gap-2 pt-2 sm:flex-row">
-          <ReservarButton
-            sucursalSlug={sucursal.slug}
+          <SucursalReservarCta
+            sucursal={sucursal}
             analyticsSource={`sucursal-card-${sucursal.slug}`}
             className="inline-flex flex-1 items-center justify-center rounded-full bg-accent px-4 py-2.5 text-sm font-semibold text-accent-foreground transition hover:bg-accent-strong"
           >
             Reservar
-          </ReservarButton>
+          </SucursalReservarCta>
           <Link
             href={`/sucursales/${sucursal.slug}`}
             className="inline-flex flex-1 items-center justify-center rounded-full border border-white/15 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10"

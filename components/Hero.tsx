@@ -4,7 +4,7 @@ import { sucursales } from "@/data/sucursales";
 import { equipo } from "@/data/equipo";
 import ReservarButton from "@/components/ReservarButton";
 import { getOrganizationContent } from "@/lib/klipper/organization";
-import { mergeSucursales, mergeEquipo, aggregateBranchRatings } from "@/lib/organization-content";
+import { getAllSucursalesView, mergeEquipo, aggregateBranchRatings } from "@/lib/organization-content";
 import { getSiteContent } from "@/lib/sanity/site-content";
 import type { StatItem } from "@/types";
 
@@ -51,7 +51,7 @@ function computeLiveStats(params: {
 
 export default async function Hero() {
   const content = await getOrganizationContent();
-  const sucursalesView = mergeSucursales(content?.branches ?? null, sucursales);
+  const sucursalesView = await getAllSucursalesView(sucursales);
   const sucursalesTexto = sucursalesView.map((s) => s.nombre).join(" · ");
   const equipoView = mergeEquipo(content?.professionals ?? null, equipo);
   const { rating: ratingReal, totalResenas: reseñasReal } = aggregateBranchRatings(sucursalesView);
