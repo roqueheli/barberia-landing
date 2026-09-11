@@ -30,6 +30,14 @@ export default defineType({
       type: "url",
       validation: (r) => r.required().uri({ scheme: ["http", "https"] }),
     }),
+    defineField({
+      name: "activa",
+      title: "Sucursal activa",
+      description:
+        "Desmarca para deshabilitarla temporalmente sin borrarla: deja de mostrarse en toda la página (grilla de sucursales, footer, wizard de reserva) hasta que la vuelvas a marcar.",
+      type: "boolean",
+      initialValue: true,
+    }),
     defineField({ name: "comuna", title: "Comuna", type: "string" }),
     defineField({ name: "direccion", title: "Dirección", type: "string" }),
     defineField({ name: "ciudad", title: "Ciudad", type: "string" }),
@@ -115,6 +123,13 @@ export default defineType({
     defineField({ name: "destacada", title: "Destacada (\"Casa matriz\")", type: "boolean" }),
   ],
   preview: {
-    select: { title: "nombre", subtitle: "direccion", media: "imagenPortada" },
+    select: { title: "nombre", subtitle: "direccion", media: "imagenPortada", activa: "activa" },
+    prepare({ title, subtitle, media, activa }) {
+      return {
+        title: activa === false ? `${title} (deshabilitada)` : title,
+        subtitle,
+        media,
+      };
+    },
   },
 });

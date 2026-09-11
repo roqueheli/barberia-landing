@@ -310,10 +310,26 @@ export interface BookingOrganization {
   timeZone: string;
 }
 
+// Sucursal creada 100% en Sanity (sin sucursal real en Klipper detrás, ver
+// lib/sanity/sucursales.ts): no tiene id de Klipper, servicios ni
+// disponibilidad — solo un nombre y un link de agenda externo (ej. Agenda
+// Pro). El wizard de reserva la muestra junto a las sucursales reales en
+// el paso "branch", pero elegirla abre `agendaUrl` en vez de continuar el
+// wizard (no hay nada más que resolver ahí).
+export interface ExternalBookingBranch {
+  nombre: string;
+  agendaUrl: string;
+}
+
 export interface BookingLanding {
   organization: BookingOrganization;
   branches: BookingBranch[];
   services: BookingService[];
+  // Ausente/opcional en lo que arma mapLandingToBookingLanding (mapper
+  // puramente de Klipper, sin acceso a Sanity) — la ruta
+  // app/api/klipper/landing/route.ts lo agrega aparte con
+  // getSanitySucursales(). Los consumidores (BookingWizard) caen a [].
+  externalBranches?: ExternalBookingBranch[];
 }
 
 export interface BookingAvailability {

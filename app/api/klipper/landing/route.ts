@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { getLanding } from "@/lib/klipper/client";
 import { mapLandingToBookingLanding } from "@/lib/klipper/mappers";
 import { KlipperApiError, KlipperNotFoundError } from "@/lib/klipper/errors";
+import { getSanitySucursales } from "@/lib/sanity/sucursales";
+import type { ExternalBookingBranch } from "@/types/klipper";
 
 // Proxy de organizations/landing_by_slug. Importante: esa respuesta trae un
 // UserSerializer completo si incluye `users`; acá se mapea a BookingLanding
@@ -15,7 +17,13 @@ export async function GET() {
 
   try {
     const landing = await getLanding(slug);
-    return NextResponse.json(mapLandingToBookingLanding(landing));
+    // Sucursales creadas 100% en Sanity (sin sucursal real en Klipper
+    // detrás): se listan junto a las reales en el paso "branch" del
+    // wizard, elegirlas abre agendaUrl en vez de continuar la reserva.
+    const externalBranches: ExternalBookingBranch[] = (await getSanitySucursales())
+      .filter((s) => s.agendaUrl)
+      .map((s) => ({ nombre: s.nombre, agendaUrl: s.agendaUrl as string }));
+    return NextResponse.json({ ...mapLandingToBookingLanding(landing), externalBranches });
   } catch (err) {
     if (err instanceof KlipperNotFoundError) {
       return NextResponse.json({ error: "organization_not_found" }, { status: 404 });

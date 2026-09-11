@@ -107,13 +107,21 @@ export default function BookingWizard({
   // elija, así que se omite el paso "service".
   const [serviceLockedFromHint, setServiceLockedFromHint] = useState(false);
 
+  // status.skipBranchStep refleja solo la config de Klipper (ej. "esta org
+  // tiene una única sucursal en Klipper") — no sabe nada de las sucursales
+  // externas de Sanity. Si hay alguna, el paso "branch" se muestra igual
+  // para que también aparezcan como opción, aunque Klipper diga que se
+  // podría saltar.
+  const hasExternalBranches = (landing?.externalBranches?.length ?? 0) > 0;
+
   const steps: StepId[] = useMemo(() => {
     const arr: StepId[] = [];
-    if (!status.skipBranchStep && !branchLockedFromHint) arr.push("branch");
+    const showBranchStep = !branchLockedFromHint && (!status.skipBranchStep || hasExternalBranches);
+    if (showBranchStep) arr.push("branch");
     if (!status.skipServiceStep && !serviceLockedFromHint) arr.push("service");
     arr.push("professional", "contact", "confirm");
     return arr;
-  }, [status.skipBranchStep, branchLockedFromHint, status.skipServiceStep, serviceLockedFromHint]);
+  }, [status.skipBranchStep, branchLockedFromHint, status.skipServiceStep, serviceLockedFromHint, hasExternalBranches]);
 
   const [stepIndex, setStepIndex] = useState(0);
   const stepId = steps[stepIndex];
@@ -341,6 +349,7 @@ export default function BookingWizard({
       return (
         <StepBranch
           branches={landing.branches}
+          externalBranches={landing.externalBranches ?? []}
           selectedId={selectedBranchId}
           onSelect={setSelectedBranchId}
           onNext={goNext}

@@ -44,7 +44,10 @@ interface SanitySucursalRaw {
   destacada?: boolean | null;
 }
 
-const SUCURSALES_QUERY = `*[_type == "sucursal" && defined(slug.current) && defined(agendaUrl)]{
+// activa != false: el campo es opcional (initialValue true solo aplica a
+// documentos nuevos) — sin el campo cargado se trata como activa, "false"
+// explícito es lo único que la deshabilita y la saca de todo el sitio.
+const SUCURSALES_QUERY = `*[_type == "sucursal" && defined(slug.current) && defined(agendaUrl) && activa != false]{
   _id, nombre, slug, agendaUrl, comuna, direccion, ciudad, region, codigoPostal,
   telefono, whatsapp, referenciaMetro, horario, googlePlaceId, rating, numeroResenas,
   numeroBarberos, descripcionCorta, imagenPortada, imagenPortadaAlt, galeria, mapsUrl,
