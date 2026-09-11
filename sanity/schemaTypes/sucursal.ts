@@ -7,7 +7,9 @@ import { defineField, defineType } from "sanity";
 // getAllSucursalesView/getSucursalView), la única diferencia es el botón
 // de reserva: si `agendaUrl` está cargado, apunta a ese link externo en
 // vez de abrir el wizard de reserva interno (ver
-// components/SucursalReservarCta.tsx).
+// components/SucursalReservarCta.tsx). Rating/reseñas: con googlePlaceId
+// cargado, se traen en vivo de Google (mismo mecanismo que ya usan las
+// sucursales de Klipper) — ver lib/sanity/sucursales.ts.
 export default defineType({
   name: "sucursal",
   title: "Sucursales (fuera de Klipper)",
@@ -57,8 +59,26 @@ export default defineType({
         },
       ],
     }),
-    defineField({ name: "rating", title: "Rating", type: "number", validation: (r) => r.min(0).max(5) }),
-    defineField({ name: "numeroResenas", title: "Número de reseñas", type: "number" }),
+    defineField({
+      name: "googlePlaceId",
+      title: "Place ID de Google",
+      description:
+        'Rating, número de reseñas y las reseñas mismas se traen en vivo desde Google con este ID — no hay que cargarlos a mano. Se obtiene con el buscador oficial de Google (buscas el nombre del local, click en el pin, copias el ID que empieza con "ChIJ"): developers.google.com/maps/documentation/javascript/examples/places-placeid-finder — un link de Google Maps o de resultados de búsqueda (con un CID en hex, ej. "#lrd=0x...") NO sirve acá, es un identificador distinto.',
+      type: "string",
+    }),
+    defineField({
+      name: "rating",
+      title: "Rating (respaldo manual)",
+      description: "Solo se usa si no hay Place ID de Google, o si Google no responde.",
+      type: "number",
+      validation: (r) => r.min(0).max(5),
+    }),
+    defineField({
+      name: "numeroResenas",
+      title: "Número de reseñas (respaldo manual)",
+      description: "Solo se usa si no hay Place ID de Google, o si Google no responde.",
+      type: "number",
+    }),
     defineField({ name: "numeroBarberos", title: "Número de barberos", type: "number" }),
     defineField({ name: "descripcionCorta", title: "Descripción corta", type: "text", rows: 3 }),
     defineField({

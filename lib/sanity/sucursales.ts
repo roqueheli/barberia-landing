@@ -10,6 +10,7 @@
 import "server-only";
 import { cache } from "react";
 import { sanityClient, urlForImage, SANITY_PROJECT_ID } from "./client";
+import { getPlaceDetails } from "@/lib/google/client";
 import type { SucursalView } from "@/lib/organization-content";
 import type { SanityImageSource } from "@sanity/image-url";
 
@@ -27,6 +28,9 @@ interface SanitySucursalRaw {
   whatsapp?: string | null;
   referenciaMetro?: string | null;
   horario?: { dias?: string | null; horas?: string | null }[] | null;
+  googlePlaceId?: string | null;
+  // Respaldo manual: solo se usa si no hay googlePlaceId, o si Google no
+  // responde (ver mapSucursal).
   rating?: number | null;
   numeroResenas?: number | null;
   numeroBarberos?: number | null;
@@ -42,12 +46,36 @@ interface SanitySucursalRaw {
 
 const SUCURSALES_QUERY = `*[_type == "sucursal" && defined(slug.current) && defined(agendaUrl)]{
   _id, nombre, slug, agendaUrl, comuna, direccion, ciudad, region, codigoPostal,
-  telefono, whatsapp, referenciaMetro, horario, rating, numeroResenas, numeroBarberos,
-  descripcionCorta, imagenPortada, imagenPortadaAlt, galeria, mapsUrl, geoLat, geoLng,
-  destacada
+  telefono, whatsapp, referenciaMetro, horario, googlePlaceId, rating, numeroResenas,
+  numeroBarberos, descripcionCorta, imagenPortada, imagenPortadaAlt, galeria, mapsUrl,
+  geoLat, geoLng, destacada
 }`;
 
-function mapSucursal(raw: SanitySucursalRaw): SucursalView | null {
+// Con googlePlaceId cargado, el rating/numeroResenas real se trae en vivo
+// de Google (mismo mecanismo que ya usan las sucursales de Klipper —
+// lib/klipper/organization.ts) en vez de depender de los campos manuales.
+// Nunca lanza: si Google falla (ID inválido, red caída, sin
+// GOOGLE_PLACES_API_KEY), cae a rating/numeroResenas manuales si los hay.
+async function resolveGoogleRating(
+  raw: SanitySucursalRaw
+): Promise<{ rating: number | undefined; numeroResenas: number | undefined }> {
+  const fallback = { rating: raw.rating ?? undefined, numeroResenas: raw.numeroResenas ?? undefined };
+  if (!raw.googlePlaceId) return fallback;
+
+  try {
+    const details = await getPlaceDetails(raw.googlePlaceId);
+    return {
+      rating: details.rating ?? fallback.rating,
+      numeroResenas: details.userRatingCount ?? fallback.numeroResenas,
+    };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "unknown error";
+    console.error("[sanity/sucursales] googlePlaceId", raw.googlePlaceId, message);
+    return fallback;
+  }
+}
+
+async function mapSucursal(raw: SanitySucursalRaw): Promise<SucursalView | null> {
   const slug = raw.slug?.current;
   if (!slug || !raw.nombre || !raw.agendaUrl) return null;
 
@@ -58,6 +86,8 @@ function mapSucursal(raw: SanitySucursalRaw): SucursalView | null {
   const galeria = (raw.galeria ?? [])
     .filter((g): g is { image: SanityImageSource; alt?: string | null } => Boolean(g.image))
     .map((g) => ({ src: urlForImage(g.image), alt: g.alt ?? raw.nombre ?? "" }));
+
+  const { rating, numeroResenas } = await resolveGoogleRating(raw);
 
   return {
     slug,
@@ -74,8 +104,8 @@ function mapSucursal(raw: SanitySucursalRaw): SucursalView | null {
     codigoPostal: raw.codigoPostal ?? undefined,
     referenciaMetro: raw.referenciaMetro ?? undefined,
     horario,
-    rating: raw.rating ?? undefined,
-    numeroResenas: raw.numeroResenas ?? undefined,
+    rating,
+    numeroResenas,
     numeroBarberos: raw.numeroBarberos ?? undefined,
     descripcionCorta: raw.descripcionCorta ?? undefined,
     imagenPortada: raw.imagenPortada ? urlForImage(raw.imagenPortada) : undefined,
@@ -86,6 +116,10 @@ function mapSucursal(raw: SanitySucursalRaw): SucursalView | null {
     imagenPortadaAlt: raw.imagenPortadaAlt ?? (raw.imagenPortada ? raw.nombre : undefined),
     galeria,
     destacada: raw.destacada ?? undefined,
+    // googlePlaceId ?? undefined: lib/google/reviews.ts:getBusinessReviews
+    // lo usa para traer el CONTENIDO de reseñas (texto/autor/foto) de esta
+    // misma sucursal para ResenasSection.
+    googlePlaceId: raw.googlePlaceId ?? undefined,
     enVivo: false,
   };
 }
@@ -99,7 +133,8 @@ export const getSanitySucursales = cache(async (): Promise<SucursalView[]> => {
       {},
       { next: { revalidate: 300, tags: ["sanity-sucursales"] } }
     );
-    return raw.map(mapSucursal).filter((s): s is SucursalView => s != null);
+    const mapped = await Promise.all(raw.map(mapSucursal));
+    return mapped.filter((s): s is SucursalView => s != null);
   } catch (err) {
     const message = err instanceof Error ? err.message : "unknown error";
     console.error("[sanity/sucursales]", message);
