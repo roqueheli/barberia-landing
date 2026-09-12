@@ -6,11 +6,6 @@ import type { SanityImageSource } from "@sanity/image-url";
 // completó un campo puntual, ese campo llega en null/[] y el componente
 // cae a su valor por defecto (el copy/foto actual) sin que el resto de la
 // página se vea afectado.
-export interface SiteContentStat {
-  valor: string;
-  etiqueta: string;
-}
-
 export interface SiteContentGalleryPhoto {
   url: string;
   alt: string;
@@ -30,7 +25,10 @@ export interface SiteContent {
   heroSubtitle: string | null;
   heroPrimaryCta: string | null;
   heroSecondaryCta: string | null;
-  heroStats: SiteContentStat[];
+  heroRatingOverride: string | null;
+  heroResenasOverride: string | null;
+  heroBarberosOverride: string | null;
+  heroSucursalesOverride: string | null;
   // Nosotros
   aboutImage: string | null;
   aboutImageAlt: string | null;
@@ -97,7 +95,10 @@ export interface SiteContentRaw {
   heroSubtitle?: string | null;
   heroPrimaryCta?: string | null;
   heroSecondaryCta?: string | null;
-  heroStats?: { valor?: string | null; etiqueta?: string | null }[];
+  heroRatingOverride?: string | null;
+  heroResenasOverride?: string | null;
+  heroBarberosOverride?: string | null;
+  heroSucursalesOverride?: string | null;
 
   aboutImage?: SanityImageSource | null;
   aboutImageAlt?: string | null;

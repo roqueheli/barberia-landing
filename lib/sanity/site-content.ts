@@ -14,7 +14,8 @@ const SITE_CONTENT_QUERY = `*[_type == "siteContent"][0]{
   logoImage, logoImageAlt, instagramHandle,
 
   heroImage, heroImageAlt, heroTitleMain, heroTitleAccent, heroSubtitle,
-  heroPrimaryCta, heroSecondaryCta, heroStats[]{ valor, etiqueta },
+  heroPrimaryCta, heroSecondaryCta, heroRatingOverride, heroResenasOverride,
+  heroBarberosOverride, heroSucursalesOverride,
 
   aboutImage, aboutImageAlt, aboutEyebrow, aboutTitle, aboutParagraphs,
   aboutIncluye, aboutCta,
@@ -56,9 +57,10 @@ function mapSiteContent(raw: SiteContentRaw | null): SiteContent {
     heroSubtitle: raw?.heroSubtitle ?? null,
     heroPrimaryCta: raw?.heroPrimaryCta ?? null,
     heroSecondaryCta: raw?.heroSecondaryCta ?? null,
-    heroStats: (raw?.heroStats ?? [])
-      .filter((s): s is { valor: string; etiqueta: string } => Boolean(s.valor && s.etiqueta))
-      .map((s) => ({ valor: s.valor, etiqueta: s.etiqueta })),
+    heroRatingOverride: raw?.heroRatingOverride ?? null,
+    heroResenasOverride: raw?.heroResenasOverride ?? null,
+    heroBarberosOverride: raw?.heroBarberosOverride ?? null,
+    heroSucursalesOverride: raw?.heroSucursalesOverride ?? null,
 
     aboutImage: raw?.aboutImage ? urlForImage(raw.aboutImage) : null,
     aboutImageAlt: raw?.aboutImageAlt ?? null,

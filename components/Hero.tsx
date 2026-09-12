@@ -19,31 +19,51 @@ const DEFAULT_HERO_SECONDARY_CTA = "Ver servicios y precios";
 const numeroReseñasFormatter = new Intl.NumberFormat("es-CL");
 
 // Las 4 stats por defecto vienen de data/site.ts (mismo copy que existe
-// hoy). rating/reseñas se reemplazan por el agregado real de
-// google_rating/google_review_count que Klipper ya trae por sucursal (ver
-// lib/organization-content.ts:aggregateBranchRatings — no requiere llamar
-// a la API de Google); barberos/sucursales por los conteos reales de
-// Klipper — cada una cae a su valor por defecto individualmente si falta
-// el dato en vivo correspondiente.
+// hoy). Cada una se resuelve en su propio orden de prioridad, sin afectar
+// a las demás: override manual de Sanity (heroXOverride) > cálculo en vivo
+// (rating/reseñas desde Google, barberos/sucursales desde Klipper/Sanity)
+// > default curado. Así se puede fijar, por ejemplo, solo el rating a un
+// valor puntual sin perder el conteo de sucursales en vivo.
 function computeLiveStats(params: {
   ratingReal: number | null;
   reseñasReal: number | null;
   barberosReal: number;
   sucursalesReal: number;
+  ratingOverride: string | null;
+  reseñasOverride: string | null;
+  barberosOverride: string | null;
+  sucursalesOverride: string | null;
 }): StatItem[] {
-  const { ratingReal, reseñasReal, barberosReal, sucursalesReal } = params;
+  const {
+    ratingReal,
+    reseñasReal,
+    barberosReal,
+    sucursalesReal,
+    ratingOverride,
+    reseñasOverride,
+    barberosOverride,
+    sucursalesOverride,
+  } = params;
   return DEFAULT_STATS.map((stat) => {
-    if (stat.id === "rating" && ratingReal != null) {
-      return { ...stat, valor: `${ratingReal.toFixed(1)}/5` };
+    if (stat.id === "rating") {
+      if (ratingOverride) return { ...stat, valor: ratingOverride };
+      if (ratingReal != null) return { ...stat, valor: `${ratingReal.toFixed(1)}/5` };
+      return stat;
     }
-    if (stat.id === "resenas" && reseñasReal != null) {
-      return { ...stat, valor: numeroReseñasFormatter.format(reseñasReal) };
+    if (stat.id === "resenas") {
+      if (reseñasOverride) return { ...stat, valor: reseñasOverride };
+      if (reseñasReal != null) return { ...stat, valor: numeroReseñasFormatter.format(reseñasReal) };
+      return stat;
     }
-    if (stat.id === "barberos" && barberosReal > 0) {
-      return { ...stat, valor: String(barberosReal) };
+    if (stat.id === "barberos") {
+      if (barberosOverride) return { ...stat, valor: barberosOverride };
+      if (barberosReal > 0) return { ...stat, valor: String(barberosReal) };
+      return stat;
     }
-    if (stat.id === "sucursales" && sucursalesReal > 0) {
-      return { ...stat, valor: String(sucursalesReal) };
+    if (stat.id === "sucursales") {
+      if (sucursalesOverride) return { ...stat, valor: sucursalesOverride };
+      if (sucursalesReal > 0) return { ...stat, valor: String(sucursalesReal) };
+      return stat;
     }
     return stat;
   });
@@ -65,14 +85,16 @@ export default async function Hero() {
   const heroSubtitle = siteContent?.heroSubtitle || DEFAULT_HERO_SUBTITLE;
   const heroPrimaryCta = siteContent?.heroPrimaryCta || DEFAULT_HERO_PRIMARY_CTA;
   const heroSecondaryCta = siteContent?.heroSecondaryCta || DEFAULT_HERO_SECONDARY_CTA;
-  const heroStats = siteContent?.heroStats.length
-    ? siteContent.heroStats
-    : computeLiveStats({
-        ratingReal,
-        reseñasReal,
-        barberosReal: equipoView.length,
-        sucursalesReal: sucursalesView.length,
-      });
+  const heroStats = computeLiveStats({
+    ratingReal,
+    reseñasReal,
+    barberosReal: equipoView.length,
+    sucursalesReal: sucursalesView.length,
+    ratingOverride: siteContent?.heroRatingOverride ?? null,
+    reseñasOverride: siteContent?.heroResenasOverride ?? null,
+    barberosOverride: siteContent?.heroBarberosOverride ?? null,
+    sucursalesOverride: siteContent?.heroSucursalesOverride ?? null,
+  });
 
   return (
     <section id="inicio" className="relative flex min-h-[92vh] items-end overflow-hidden">

@@ -83,22 +83,37 @@ export default defineType({
     defineField({ name: "heroSubtitle", title: "Subtítulo", type: "text", rows: 3, group: "hero" }),
     defineField({ name: "heroPrimaryCta", title: "Botón principal", type: "string", group: "hero" }),
     defineField({ name: "heroSecondaryCta", title: "Botón secundario", type: "string", group: "hero" }),
+    // Cada estadística se anula por separado: si se completa, reemplaza SOLO
+    // ese valor (las otras 3 siguen calculándose en vivo — rating/reseñas
+    // desde Google, barberos/sucursales desde Klipper). Dejar vacío para
+    // que siga siendo automático.
     defineField({
-      name: "heroStats",
-      title: "Estadísticas",
-      type: "array",
+      name: "heroRatingOverride",
+      title: "Rating (anula el cálculo en vivo)",
+      description: 'Ej: "5/5". Vacío = se calcula solo desde Google.',
+      type: "string",
       group: "hero",
-      of: [
-        {
-          type: "object",
-          name: "stat",
-          fields: [
-            defineField({ name: "valor", title: "Valor", type: "string" }),
-            defineField({ name: "etiqueta", title: "Etiqueta", type: "string" }),
-          ],
-          preview: { select: { title: "valor", subtitle: "etiqueta" } },
-        },
-      ],
+    }),
+    defineField({
+      name: "heroResenasOverride",
+      title: "Cantidad de reseñas (anula el cálculo en vivo)",
+      description: 'Ej: "1.348". Vacío = se calcula solo desde Google.',
+      type: "string",
+      group: "hero",
+    }),
+    defineField({
+      name: "heroBarberosOverride",
+      title: "Cantidad de barberos (anula el cálculo en vivo)",
+      description: "Vacío = se calcula solo desde Klipper.",
+      type: "string",
+      group: "hero",
+    }),
+    defineField({
+      name: "heroSucursalesOverride",
+      title: "Cantidad de sucursales (anula el cálculo en vivo)",
+      description: "Vacío = se calcula solo desde Klipper/Sanity.",
+      type: "string",
+      group: "hero",
     }),
 
     // --- Nosotros -------------------------------------------------------
