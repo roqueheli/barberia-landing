@@ -10,6 +10,15 @@
   "observability": {
     "enabled": true
   },
+  // Dominio propio en vez del *.workers.dev por defecto. Requiere que
+  // betterbarberclub.cl y www.betterbarberclub.cl ya estén agregados como
+  // dominios en esta cuenta de Cloudflare (DNS gestionado por Cloudflare)
+  // antes del próximo `wrangler deploy` — si no, el deploy falla al
+  // intentar atar la ruta a un dominio que Cloudflare no reconoce.
+  "routes": [
+    { "pattern": "betterbarberclub.cl", "custom_domain": true },
+    { "pattern": "www.betterbarberclub.cl", "custom_domain": true }
+  ],
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
