@@ -119,6 +119,16 @@ export interface KlipperService {
   // registros duplicados. `price` a nivel de servicio es el precio base/
   // default; cuando la sucursal elegida tiene un override acá, ese manda.
   branch_prices?: { branch_id: number; price: number | string }[] | null;
+  // Disponibilidad por sucursal — distinto de branch_id/branch_prices, que
+  // son sobre PRECIO. Semántica exacta (documentada por Klipper):
+  // undefined/null = servicio no migrado a esta funcionalidad todavía →
+  // tratar como disponible en TODAS las sucursales (nunca ocultarlo);
+  // [] = existe pero no está asignado a ninguna sucursal → no mostrarlo en
+  // ninguna; [12, 45] = disponible solo en esas sucursales. El catálogo
+  // completo (sin filtrar) viene en un único landing_by_slug — el filtro
+  // por sucursal se hace client-side, ver
+  // components/BookingWizard/serviceUtils.ts:isServiceAvailableInBranch.
+  branch_ids?: number[] | null;
   // Overlay que el backend agrega cuando hay una oferta aplicable a este
   // servicio: precio ya rebajado + metadatos de la oferta. El front no
   // calcula el descuento, solo lo pinta.
@@ -288,6 +298,11 @@ export interface BookingService {
   // sucursal elegida, el override con branchId === selectedBranchId y caer
   // al `price` base si no existe uno para esa sucursal.
   branchPrices?: { branchId: number; price: number }[];
+  // Disponibilidad por sucursal (ver branch_ids en KlipperService).
+  // undefined = disponible en todas (servicio no migrado); [] = en
+  // ninguna; [12, 45] = solo en esas. Filtrar con
+  // serviceUtils.ts:isServiceAvailableInBranch, nunca comparar directo.
+  branchIds?: number[];
 }
 
 // Igual que BookingService pero con foto/descripción — el wizard de reserva

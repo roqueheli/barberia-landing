@@ -1,11 +1,32 @@
 import { describe, expect, it } from "vitest";
-import { resolveSelectedService, resolveServicesForBranch } from "./serviceUtils";
+import { isServiceAvailableInBranch, resolveSelectedService, resolveServicesForBranch } from "./serviceUtils";
 import type { BookingService } from "@/types/klipper";
 
 const svc = (over: Partial<BookingService> & Pick<BookingService, "id" | "name" | "price">): BookingService => ({
   duration: 30,
   branchId: null,
   ...over,
+});
+
+describe("isServiceAvailableInBranch", () => {
+  it("sin branchId elegido, siempre disponible", () => {
+    expect(isServiceAvailableInBranch(svc({ id: 1, name: "Corte", price: 1 }), null)).toBe(true);
+  });
+
+  it("branchIds undefined = servicio no migrado, disponible en todas", () => {
+    expect(isServiceAvailableInBranch(svc({ id: 1, name: "Corte", price: 1 }), 10)).toBe(true);
+  });
+
+  it("branchIds vacío = no asignado a ninguna sucursal", () => {
+    expect(isServiceAvailableInBranch(svc({ id: 1, name: "Corte", price: 1, branchIds: [] }), 10)).toBe(false);
+  });
+
+  it("branchIds con ids = disponible solo en esas sucursales", () => {
+    const service = svc({ id: 1, name: "Corte", price: 1, branchIds: [12, 45] });
+    expect(isServiceAvailableInBranch(service, 12)).toBe(true);
+    expect(isServiceAvailableInBranch(service, 45)).toBe(true);
+    expect(isServiceAvailableInBranch(service, 99)).toBe(false);
+  });
 });
 
 describe("resolveServicesForBranch", () => {
@@ -78,6 +99,26 @@ describe("resolveServicesForBranch", () => {
       }),
     ];
     expect(resolveServicesForBranch(services, 999)[0]).toMatchObject({ price: 15000 });
+  });
+
+  it("filtra por branch_ids: oculta servicios no asignados a la sucursal elegida", () => {
+    const services = [
+      svc({ id: 1, name: "Corte", price: 8000, branchIds: [10] }),
+      svc({ id: 2, name: "Barba", price: 5000, branchIds: [20] }),
+      svc({ id: 3, name: "Cejas", price: 3000 }), // sin branchIds = disponible en todas
+    ];
+    expect(resolveServicesForBranch(services, 10).map((s) => s.id)).toEqual([1, 3]);
+    expect(resolveServicesForBranch(services, 20).map((s) => s.id)).toEqual([2, 3]);
+  });
+
+  it("branch_ids vacío no muestra el servicio en ninguna sucursal", () => {
+    const services = [svc({ id: 1, name: "Servicio nuevo", price: 5000, branchIds: [] })];
+    expect(resolveServicesForBranch(services, 10)).toEqual([]);
+  });
+
+  it("una sucursal sin servicios asignados devuelve lista vacía, no lanza", () => {
+    const services = [svc({ id: 1, name: "Corte", price: 8000, branchIds: [10] })];
+    expect(resolveServicesForBranch(services, 999)).toEqual([]);
   });
 });
 

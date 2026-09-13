@@ -1,19 +1,41 @@
 import type { BookingService } from "@/types/klipper";
 
-// Klipper puede representar un precio por sucursal de dos formas: (a) un
-// registro de servicio separado con su propio `branch_id` (nunca
-// observado en datos reales — se conserva el manejo por si acaso), o (b)
-// el mecanismo real verificado contra la respuesta de landing_by_slug
-// (org better-barber-club, servicio "Corte de Cabello"): overrides en
-// `branchPrices` sobre el MISMO registro (`price` es el precio base/
-// default). Estas utilidades resuelven, para la sucursal elegida en el
-// wizard, qué precio corresponde mostrar — aplicando ambos mecanismos.
+// landing_by_slug trae el catálogo COMPLETO de servicios en un solo fetch
+// (no filtrado por sucursal) — el filtrado es intencionalmente client-side
+// para poder cambiar de sucursal sin volver a pedirle nada al backend.
+// Estas utilidades resuelven, para la sucursal elegida en el wizard:
+//   - qué servicios están DISPONIBLES ahí (branch_ids, ver
+//     isServiceAvailableInBranch), y
+//   - qué PRECIO corresponde mostrar. Klipper puede representar un precio
+//     por sucursal de dos formas: (a) un registro de servicio separado con
+//     su propio `branch_id` (nunca observado en datos reales — se
+//     conserva el manejo por si acaso), o (b) el mecanismo real verificado
+//     contra la respuesta de landing_by_slug (org better-barber-club,
+//     servicio "Corte de Cabello"): overrides en `branchPrices` sobre el
+//     MISMO registro (`price` es el precio base/default).
 
 // Clave lógica de un servicio (lo que el cliente percibe como "un servicio",
 // más allá de en qué sucursal esté configurado). Se usa el nombre porque los
 // registros por sucursal comparten nombre pero tienen ids distintos.
 function serviceKey(service: BookingService): string {
   return service.name.trim().toLowerCase();
+}
+
+// Disponibilidad por sucursal (branch_ids) — documentado por Klipper,
+// verificado contra landing_by_slug. OJO con la semántica: branchIds
+// undefined/ausente NO es lo mismo que branchIds vacío.
+//   - undefined  → servicio no migrado a esta funcionalidad → disponible
+//     en TODAS las sucursales (nunca ocultarlo).
+//   - []         → existe pero no está asignado a ninguna sucursal → no
+//     mostrarlo en ninguna.
+//   - [12, 45]   → disponible solo en esas sucursales.
+export function isServiceAvailableInBranch(
+  service: BookingService,
+  branchId: number | null
+): boolean {
+  if (branchId == null) return true;
+  if (service.branchIds == null) return true;
+  return service.branchIds.includes(branchId);
 }
 
 // Aplica el override de branchPrices correspondiente a `branchId`, si
@@ -26,12 +48,15 @@ function withBranchPrice(service: BookingService, branchId: number | null): Book
 }
 
 /**
- * Devuelve un único servicio por clave lógica, eligiendo para `branchId` el
- * registro específico de esa sucursal cuando existe (mecanismo por
- * registro duplicado) y cayendo al global (branch_id === null) en caso
- * contrario — y aplicando después el override de `branchPrices` de esa
- * sucursal sobre el registro resuelto (mecanismo real). El resultado
- * conserva el orden de primera aparición en `services`.
+ * Devuelve los servicios disponibles para `branchId` (filtrados por
+ * `branchIds`, ver isServiceAvailableInBranch), un único registro por
+ * clave lógica, eligiendo para `branchId` el registro específico de esa
+ * sucursal cuando existe (mecanismo por registro duplicado) y cayendo al
+ * global (branch_id === null) en caso contrario — y aplicando después el
+ * override de `branchPrices` de esa sucursal sobre el registro resuelto
+ * (mecanismo real). El resultado conserva el orden de primera aparición en
+ * `services`. Puede devolver []: no es un error, esa sucursal simplemente
+ * no tiene servicios asignados todavía — mostrar el estado vacío normal.
  */
 export function resolveServicesForBranch(
   services: BookingService[],
@@ -40,6 +65,7 @@ export function resolveServicesForBranch(
   const byKey = new Map<string, BookingService>();
 
   for (const service of services) {
+    if (!isServiceAvailableInBranch(service, branchId)) continue;
     const key = serviceKey(service);
     const current = byKey.get(key);
 

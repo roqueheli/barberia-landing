@@ -323,6 +323,25 @@ describe("mapLandingToBookingLanding", () => {
     ]);
   });
 
+  // branch_ids es disponibilidad, no precio — distinto de branch_id/
+  // branch_prices. null/ausente y [] no son equivalentes (ver
+  // components/BookingWizard/serviceUtils.ts:isServiceAvailableInBranch):
+  // acá solo se verifica que el mapper preserva esa distinción tal cual.
+  it("mapea branch_ids preservando la distinción entre ausente/null y []", () => {
+    const landing: KlipperLandingResponse = {
+      organization: { id: 1, name: "Org", slug: "org" },
+      branches: [{ id: 10, name: "Sucursal A", active: true }],
+      services: [
+        { id: 1, name: "Con sucursales", price: 1000, duration: 10, available_online: true, branch_ids: [12, 45] },
+        { id: 2, name: "Sin branch_ids", price: 1000, duration: 10, available_online: true },
+        { id: 3, name: "branch_ids null", price: 1000, duration: 10, available_online: true, branch_ids: null },
+        { id: 4, name: "branch_ids vacío", price: 1000, duration: 10, available_online: true, branch_ids: [] },
+      ],
+    };
+    const result = mapLandingToBookingLanding(landing);
+    expect(result.services.map((s) => s.branchIds)).toEqual([[12, 45], undefined, undefined, []]);
+  });
+
   it("usa America/Santiago como default de timeZone si el metadata no la trae", () => {
     const landing: KlipperLandingResponse = {
       organization: { id: 1, name: "Org", slug: "org" },

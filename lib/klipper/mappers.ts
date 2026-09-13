@@ -104,6 +104,11 @@ export function mapService(service: KlipperService): BookingService {
       branchId: bp.branch_id,
       price: toNumber(bp.price),
     })),
+    // ?? undefined (no ?? []): null/undefined y [] son semánticamente
+    // distintos acá — ver el comentario de branch_ids en KlipperService.
+    // Coercionar null/undefined a [] rompería "servicio no migrado,
+    // disponible en todas" y lo mostraría como "no disponible en ninguna".
+    branchIds: service.branch_ids ?? undefined,
   };
 }
 
