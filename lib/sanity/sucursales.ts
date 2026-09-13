@@ -10,7 +10,7 @@
 import "server-only";
 import { cache } from "react";
 import { sanityClient, urlForImage, SANITY_PROJECT_ID } from "./client";
-import { getPlaceDetails } from "@/lib/google/client";
+import { getPlaceDetails, RATING_FIELD_MASK } from "@/lib/google/client";
 import type { SucursalView } from "@/lib/organization-content";
 import type { SanityImageSource } from "@sanity/image-url";
 
@@ -59,6 +59,10 @@ const SUCURSALES_QUERY = `*[_type == "sucursal" && defined(slug.current) && defi
 // lib/klipper/organization.ts) en vez de depender de los campos manuales.
 // Nunca lanza: si Google falla (ID inválido, red caída, sin
 // GOOGLE_PLACES_API_KEY), cae a rating/numeroResenas manuales si los hay.
+// Pide SOLO rating/userRatingCount (RATING_FIELD_MASK) — nunca reviews acá,
+// este flujo no lo usa (ver lib/google/reviews.ts para el contenido de
+// reseñas). Pedirlo igual haría que esta llamada facture Enterprise +
+// Atmosphere en vez de Enterprise a secas, sin ningún beneficio real.
 async function resolveGoogleRating(
   raw: SanitySucursalRaw
 ): Promise<{ rating: number | undefined; numeroResenas: number | undefined }> {
@@ -66,7 +70,7 @@ async function resolveGoogleRating(
   if (!raw.googlePlaceId) return fallback;
 
   try {
-    const details = await getPlaceDetails(raw.googlePlaceId);
+    const details = await getPlaceDetails(raw.googlePlaceId, RATING_FIELD_MASK);
     return {
       rating: details.rating ?? fallback.rating,
       numeroResenas: details.userRatingCount ?? fallback.numeroResenas,

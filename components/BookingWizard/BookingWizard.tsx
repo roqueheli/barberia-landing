@@ -11,6 +11,7 @@ import type {
 import type { StatusApiResponse } from "@/app/api/klipper/status/route";
 import { buildWhatsAppLink, mensajeReservaSucursal, toInternationalPhone } from "@/lib/whatsapp";
 import { normalizeForMatch } from "@/lib/match-by-name";
+import { fetchBookingLanding } from "@/lib/booking-landing-cache";
 import { addDaysIso, toIsoDate } from "./dateUtils";
 import { resolveSelectedService, resolveServicesForBranch } from "./serviceUtils";
 import StepBranch from "./StepBranch";
@@ -144,11 +145,7 @@ export default function BookingWizard({
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/klipper/landing")
-      .then(async (res) => {
-        if (!res.ok) throw new Error("landing_failed");
-        return (await res.json()) as BookingLanding;
-      })
+    fetchBookingLanding()
       .then((data) => {
         if (cancelled) return;
         if (data.branches.length === 0 || data.services.length === 0) {

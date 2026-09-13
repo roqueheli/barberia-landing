@@ -18,7 +18,7 @@ import "server-only";
 import { cache } from "react";
 import { sucursales } from "@/data/sucursales";
 import { getAllSucursalesView } from "@/lib/organization-content";
-import { getPlaceDetails } from "./client";
+import { getPlaceDetails, REVIEWS_FIELD_MASK } from "./client";
 import { combineReviews, type BranchPlaceDetails } from "./aggregate";
 import type { GoogleReview } from "@/types/google";
 
@@ -32,7 +32,11 @@ export const getBusinessReviews = cache(async (): Promise<GoogleReview[] | null>
   const results = await Promise.allSettled(
     branchesWithPlaceId.map(async (s) => ({
       sucursalNombre: s.nombre,
-      details: await getPlaceDetails(s.googlePlaceId as string),
+      // Solo reviews (REVIEWS_FIELD_MASK) — este flujo nunca lee rating/
+      // userRatingCount de la respuesta (ver lib/google/aggregate.ts),
+      // pedirlos igual no cambiaría el SKU (reviews ya es el campo más
+      // caro) pero sí agregaría bytes de respuesta sin uso.
+      details: await getPlaceDetails(s.googlePlaceId as string, REVIEWS_FIELD_MASK),
     }))
   );
 
