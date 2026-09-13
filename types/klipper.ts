@@ -317,6 +317,13 @@ export interface MarketingService {
   /** Overlay de oferta ya resuelto por el backend (precio rebajado + metadatos)
    * o null si el servicio no tiene oferta aplicable. */
   priceWithOffer: PriceWithOffer | null;
+  // Overrides de precio por sucursal (ver branch_prices en KlipperService).
+  // El "Desde $X" de marketing debe ser el mínimo entre `price` y estos
+  // overrides — mostrar solo `price` puede ser más ALTO que lo que en
+  // realidad se paga en la sucursal más barata (verificado contra datos
+  // reales: "Corte de Cabello" tenía price=16000 pero un override de
+  // 14500 en una sucursal, y la card de marketing mostraba 16000).
+  branchPrices: { branchId: number; price: number }[];
 }
 
 export interface BookingOrganization {

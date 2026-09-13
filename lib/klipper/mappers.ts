@@ -122,6 +122,10 @@ export function mapMarketingService(service: KlipperService): MarketingService {
     photoUrl: nonEmpty(service.photo_url),
     // Overlay de oferta tal cual lo entrega el backend (precio ya rebajado).
     priceWithOffer: service.price_with_offer ?? null,
+    branchPrices: (service.branch_prices ?? []).map((bp) => ({
+      branchId: bp.branch_id,
+      price: toNumber(bp.price),
+    })),
   };
 }
 

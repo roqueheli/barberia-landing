@@ -256,13 +256,24 @@ export function aggregateBranchRatings(
   };
 }
 
+// El "Desde $X" de marketing debe ser el mínimo real que un cliente puede
+// pagar en cualquier sucursal, no solo el precio base/global — Klipper
+// modela el precio por sucursal como overrides (branchPrices) sobre el
+// mismo registro, que pueden ser más BAJOS que `price` (verificado con
+// datos reales: "Corte de Cabello" con price=16000 y un override de
+// 14500 en una sucursal — mostrar 16000 como "Desde" era incorrecto).
+function minServicePrice(service: MarketingService): number {
+  const prices = [service.price, ...service.branchPrices.map((bp) => bp.price)];
+  return Math.min(...prices);
+}
+
 function mergeOneServicio(service: MarketingService, curated: Servicio | undefined): ServicioView {
   if (!curated) {
     return {
       slug: uniqueFallbackSlug(service.name, service.id),
       nombre: service.name,
       descripcionCorta: service.description ?? undefined,
-      precioDesde: service.price,
+      precioDesde: minServicePrice(service),
       moneda: "CLP",
       duracionMinutos: service.duration,
       imagen: service.photoUrl ?? undefined,
@@ -280,7 +291,7 @@ function mergeOneServicio(service: MarketingService, curated: Servicio | undefin
     categoria: curated.categoria,
     descripcionCorta: service.description ?? curated.descripcionCorta,
     descripcionLarga: curated.descripcionLarga,
-    precioDesde: service.price,
+    precioDesde: minServicePrice(service),
     moneda: "CLP",
     duracionMinutos: service.duration,
     imagen: service.photoUrl ?? curated.imagen,
@@ -309,7 +320,7 @@ function liveServicioView(service: MarketingService): ServicioView {
     nombre: service.name,
     descripcionCorta: service.description ?? undefined,
     descripcionLarga: service.description ?? undefined,
-    precioDesde: service.price,
+    precioDesde: minServicePrice(service),
     moneda: "CLP",
     duracionMinutos: service.duration,
     imagen: service.photoUrl ?? undefined,

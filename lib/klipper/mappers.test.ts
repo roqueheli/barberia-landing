@@ -209,6 +209,7 @@ describe("mapMarketingService", () => {
       description: "Corte clásico o moderno",
       photoUrl: "https://cdn.jsdelivr.net/gh/example/corte.jpg",
       priceWithOffer: null,
+      branchPrices: [],
     });
   });
 
@@ -230,7 +231,31 @@ describe("mapMarketingService", () => {
       description: null,
       photoUrl: null,
       priceWithOffer: null,
+      branchPrices: [],
     });
+  });
+
+  // Verificado contra datos reales de Klipper (servicio "Corte de
+  // Cabello", org better-barber-club): price=16000 con overrides de
+  // 14500/16900 por sucursal — la card de marketing debe poder calcular
+  // el mínimo real, no solo mostrar el price base.
+  it("mapea branch_prices (price string a number, branch_id a branchId)", () => {
+    const service: KlipperService = {
+      id: 3,
+      name: "Corte de Cabello",
+      price: "16000.0",
+      duration: 45,
+      available_online: true,
+      branch_prices: [
+        { branch_id: 2411, price: "16900.0" },
+        { branch_id: 2412, price: "14500.0" },
+      ],
+    };
+
+    expect(mapMarketingService(service).branchPrices).toEqual([
+      { branchId: 2411, price: 16900 },
+      { branchId: 2412, price: 14500 },
+    ]);
   });
 });
 

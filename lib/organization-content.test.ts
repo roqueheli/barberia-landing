@@ -316,6 +316,7 @@ describe("mergeServicios", () => {
       description: null,
       photoUrl: null,
       priceWithOffer: null,
+      branchPrices: [],
     };
     const [result] = mergeServicios([service], [curatedServicio]);
 
@@ -323,6 +324,29 @@ describe("mergeServicios", () => {
     expect(result.precioDesde).toBe(13500);
     expect(result.duracionMinutos).toBe(45);
     expect(result.incluye).toEqual(["Diagnóstico"]);
+  });
+
+  // Verificado contra datos reales de Klipper (servicio "Corte de
+  // Cabello", org better-barber-club): price=16000 con un override de
+  // 14500 en una sucursal — "Desde" debe mostrar el mínimo real (14500),
+  // no el price base, que puede ser más alto que lo que se paga en la
+  // sucursal más barata.
+  it("precioDesde es el mínimo entre price y branchPrices, no solo el price base", () => {
+    const service: MarketingService = {
+      id: 1,
+      name: "Corte clásico",
+      price: 16000,
+      duration: 45,
+      description: null,
+      photoUrl: null,
+      priceWithOffer: null,
+      branchPrices: [
+        { branchId: 2411, price: 16900 },
+        { branchId: 2412, price: 14500 },
+      ],
+    };
+    const [result] = mergeServicios([service], [curatedServicio]);
+    expect(result.precioDesde).toBe(14500);
   });
 
   it("con live=null degrada al contenido curado", () => {
@@ -340,6 +364,7 @@ describe("mergeServicios", () => {
       description: "Descripción real de Klipper",
       photoUrl: "https://cdn.jsdelivr.net/gh/example/servicio-nuevo.jpg",
       priceWithOffer: null,
+      branchPrices: [],
     };
     const [result] = mergeServicios([service], [curatedServicio]);
 
