@@ -104,6 +104,11 @@ export interface KlipperService {
   price: number | string;
   duration: number;
   available_online: boolean;
+  // Verificado contra la respuesta real de landing_by_slug: hay servicios
+  // reales con available_online=true pero active=false (deshabilitados
+  // por el dueño sin haberlos borrado) — hay que filtrar por AMBOS
+  // campos, available_online solo no alcanza.
+  active: boolean;
   description?: string | null;
   photo_url?: string | null;
   business_type_id?: number | null;

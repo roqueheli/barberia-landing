@@ -57,7 +57,11 @@ export const getOrganizationContent = cache(async (): Promise<OrganizationConten
     organizationInstagramHandle =
       landing.organization.metadata?.media_configs?.social_media?.instagram || null;
     branches = (landing.branches ?? []).filter((b) => b.active).map(mapMarketingBranch);
-    services = (landing.services ?? []).filter((s) => s.available_online).map(mapMarketingService);
+    // available_online solo no alcanza: hay servicios reales con
+    // available_online=true pero active=false (deshabilitados por el
+    // dueño sin borrarlos) — mismo criterio que
+    // lib/klipper/mappers.ts:mapLandingToBookingLanding.
+    services = (landing.services ?? []).filter((s) => s.available_online && s.active).map(mapMarketingService);
   } catch (err) {
     const message = err instanceof KlipperApiError ? err.message : "unknown error";
     console.error("[klipper/organization]", message);

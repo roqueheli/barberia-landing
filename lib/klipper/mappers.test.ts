@@ -197,6 +197,7 @@ describe("mapMarketingService", () => {
       price: 8000,
       duration: 30,
       available_online: true,
+      active: true,
       description: "Corte clásico o moderno",
       photo_url: "https://cdn.jsdelivr.net/gh/example/corte.jpg",
     };
@@ -220,6 +221,7 @@ describe("mapMarketingService", () => {
       price: 5000,
       duration: 20,
       available_online: true,
+      active: true,
       description: "",
     };
 
@@ -246,6 +248,7 @@ describe("mapMarketingService", () => {
       price: "16000.0",
       duration: 45,
       available_online: true,
+      active: true,
       branch_prices: [
         { branch_id: 2411, price: "16900.0" },
         { branch_id: 2412, price: "14500.0" },
@@ -260,7 +263,7 @@ describe("mapMarketingService", () => {
 });
 
 describe("mapLandingToBookingLanding", () => {
-  it("filtra sucursales inactivas y servicios no disponibles online, y no expone usuarios", () => {
+  it("filtra sucursales inactivas y servicios no disponibles online o deshabilitados, y no expone usuarios", () => {
     const landing: KlipperLandingResponse = {
       organization: {
         id: 42,
@@ -273,8 +276,12 @@ describe("mapLandingToBookingLanding", () => {
         { id: 2, name: "Sucursal cerrada", active: false },
       ],
       services: [
-        { id: 10, name: "Corte clásico", price: 12000, duration: 40, available_online: true },
-        { id: 11, name: "Solo en local", price: 5000, duration: 15, available_online: false },
+        { id: 10, name: "Corte clásico", price: 12000, duration: 40, available_online: true, active: true },
+        { id: 11, name: "Solo en local", price: 5000, duration: 15, available_online: false, active: true },
+        // Verificado contra datos reales de Klipper (org better-barber-club):
+        // hay servicios con available_online=true pero active=false —
+        // deshabilitados por el dueño sin borrarlos. No deben mostrarse.
+        { id: 12, name: "Deshabilitado", price: 7000, duration: 20, available_online: true, active: false },
       ],
       users: [
         {
@@ -307,8 +314,8 @@ describe("mapLandingToBookingLanding", () => {
       organization: { id: 1, name: "Org", slug: "org" },
       branches: [{ id: 10, name: "Sucursal A", active: true }],
       services: [
-        { id: 1, name: "Corte", price: "8000.0", duration: 30, available_online: true, branch_id: null },
-        { id: 2, name: "Corte", price: "10000.0", duration: 30, available_online: true, branch_id: 10 },
+        { id: 1, name: "Corte", price: "8000.0", duration: 30, available_online: true, active: true, branch_id: null },
+        { id: 2, name: "Corte", price: "10000.0", duration: 30, available_online: true, active: true, branch_id: 10 },
       ],
     };
     const result = mapLandingToBookingLanding(landing);
@@ -333,6 +340,7 @@ describe("mapLandingToBookingLanding", () => {
           price: "15000.0",
           duration: 45,
           available_online: true,
+          active: true,
           branch_id: null,
           branch_prices: [
             { branch_id: 2412, price: "13000.0" },
@@ -357,10 +365,10 @@ describe("mapLandingToBookingLanding", () => {
       organization: { id: 1, name: "Org", slug: "org" },
       branches: [{ id: 10, name: "Sucursal A", active: true }],
       services: [
-        { id: 1, name: "Con sucursales", price: 1000, duration: 10, available_online: true, branch_ids: [12, 45] },
-        { id: 2, name: "Sin branch_ids", price: 1000, duration: 10, available_online: true },
-        { id: 3, name: "branch_ids null", price: 1000, duration: 10, available_online: true, branch_ids: null },
-        { id: 4, name: "branch_ids vacío", price: 1000, duration: 10, available_online: true, branch_ids: [] },
+        { id: 1, name: "Con sucursales", price: 1000, duration: 10, available_online: true, active: true, branch_ids: [12, 45] },
+        { id: 2, name: "Sin branch_ids", price: 1000, duration: 10, available_online: true, active: true },
+        { id: 3, name: "branch_ids null", price: 1000, duration: 10, available_online: true, active: true, branch_ids: null },
+        { id: 4, name: "branch_ids vacío", price: 1000, duration: 10, available_online: true, active: true, branch_ids: [] },
       ],
     };
     const result = mapLandingToBookingLanding(landing);

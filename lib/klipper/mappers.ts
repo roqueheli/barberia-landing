@@ -137,7 +137,11 @@ export function mapLandingToBookingLanding(landing: KlipperLandingResponse): Boo
       timeZone: landing.organization.metadata?.time_zone ?? "America/Santiago",
     },
     branches: (landing.branches ?? []).filter((b) => b.active).map(mapBranch),
-    services: (landing.services ?? []).filter((s) => s.available_online).map(mapService),
+    // available_online solo no alcanza: hay servicios reales con
+    // available_online=true pero active=false (deshabilitados por el
+    // dueño sin borrarlos) — verificado contra la respuesta real de
+    // landing_by_slug.
+    services: (landing.services ?? []).filter((s) => s.available_online && s.active).map(mapService),
   };
 }
 
