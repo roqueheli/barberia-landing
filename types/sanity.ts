@@ -56,6 +56,9 @@ export interface SiteContent {
   serviciosTitle: string | null;
   serviciosDescription: string | null;
   serviciosCta: string | null;
+  /** Default false: sin configurar en Sanity, los servicios no muestran
+   * precio. Solo true si el editor lo marcó explícitamente en Studio. */
+  mostrarPrecioServicios: boolean;
   // Sucursales (solo el antetítulo — la H2 se calcula en vivo)
   sucursalesEyebrow: string | null;
   // Equipo
@@ -130,6 +133,7 @@ export interface SiteContentRaw {
   serviciosTitle?: string | null;
   serviciosDescription?: string | null;
   serviciosCta?: string | null;
+  mostrarPrecioServicios?: boolean | null;
 
   sucursalesEyebrow?: string | null;
 

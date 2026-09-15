@@ -19,10 +19,20 @@ function offerBadgeLabel(oferta: NonNullable<ServicioView["priceWithOffer"]>): s
   return `${formatCLP(oferta.discount)} OFF`;
 }
 
-export default function ServicioCard({ servicio }: { servicio: ServicioView }) {
+interface ServicioCardProps {
+  servicio: ServicioView;
+  /** Default false — ver siteContent.mostrarPrecioServicios en Sanity: sin
+   * configurar, la card no muestra precio (ni el "Desde $X" normal ni el
+   * de una oferta), solo nombre/foto/duración. La insignia de descuento
+   * (badge "% OFF") se sigue mostrando siempre — no es un monto. */
+  mostrarPrecio?: boolean;
+}
+
+export default function ServicioCard({ servicio, mostrarPrecio = false }: ServicioCardProps) {
   // El backend entrega price_with_offer ya resuelto (precio rebajado +
   // metadatos); el front solo lo pinta, nunca calcula el descuento.
   const oferta = servicio.priceWithOffer ?? null;
+  const mostrarPrecioOferta = mostrarPrecio && oferta;
 
   return (
     <Link
@@ -73,8 +83,8 @@ export default function ServicioCard({ servicio }: { servicio: ServicioView }) {
         {servicio.descripcionCorta && (
           <p className="line-clamp-2 text-sm text-neutral-400">{servicio.descripcionCorta}</p>
         )}
-        <div className="mt-auto flex items-center justify-between pt-4">
-          {oferta ? (
+        <div className={`mt-auto flex items-center pt-4 ${mostrarPrecio ? "justify-between" : "justify-end"}`}>
+          {mostrarPrecioOferta ? (
             <span className="flex items-baseline gap-2">
               <span className="text-sm text-neutral-500 line-through">
                 {formatCLP(servicio.precioDesde)}
@@ -84,9 +94,11 @@ export default function ServicioCard({ servicio }: { servicio: ServicioView }) {
               </span>
             </span>
           ) : (
-            <span className="text-lg font-bold text-accent">
-              Desde {formatCLP(servicio.precioDesde)}
-            </span>
+            mostrarPrecio && (
+              <span className="text-lg font-bold text-accent">
+                Desde {formatCLP(servicio.precioDesde)}
+              </span>
+            )
           )}
           <span className="text-sm text-neutral-500">{servicio.duracionMinutos} min</span>
         </div>

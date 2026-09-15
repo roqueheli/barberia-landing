@@ -5,8 +5,7 @@ import { getSiteContent } from "@/lib/sanity/site-content";
 
 const DEFAULT_SERVICIOS_EYEBROW = "Servicios y precios";
 const DEFAULT_SERVICIOS_TITLE = "Elige tu servicio";
-const DEFAULT_SERVICIOS_DESCRIPTION =
-  "Precios transparentes, sin letra chica. Haz clic en cualquier servicio para ver el detalle completo.";
+const DEFAULT_SERVICIOS_DESCRIPTION = "Haz clic en cualquier servicio para ver el detalle completo.";
 const DEFAULT_SERVICIOS_CTA = "Ver la carta completa";
 
 export default async function ServiciosSection() {
@@ -17,6 +16,7 @@ export default async function ServiciosSection() {
   const serviciosTitle = siteContent?.serviciosTitle || DEFAULT_SERVICIOS_TITLE;
   const serviciosDescription = siteContent?.serviciosDescription || DEFAULT_SERVICIOS_DESCRIPTION;
   const serviciosCta = siteContent?.serviciosCta || DEFAULT_SERVICIOS_CTA;
+  const mostrarPrecio = siteContent?.mostrarPrecioServicios ?? false;
 
   return (
     <section
@@ -33,7 +33,7 @@ export default async function ServiciosSection() {
         <p className="mt-4 text-lg text-neutral-400">{serviciosDescription}</p>
       </div>
 
-      <ServiciosPaginados servicios={serviciosView} porPagina={9} />
+      <ServiciosPaginados servicios={serviciosView} porPagina={9} mostrarPrecio={mostrarPrecio} />
 
       {serviciosView.length === 0 && (
         <p className="mt-12 text-center text-neutral-400">

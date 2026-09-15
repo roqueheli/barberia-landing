@@ -203,6 +203,14 @@ export default defineType({
     defineField({ name: "serviciosTitle", title: "Título", type: "string", group: "servicios" }),
     defineField({ name: "serviciosDescription", title: "Descripción", type: "text", rows: 2, group: "servicios" }),
     defineField({ name: "serviciosCta", title: "Botón", type: "string", group: "servicios" }),
+    defineField({
+      name: "mostrarPrecioServicios",
+      title: "Mostrar precio (\"Desde $X\")",
+      description: "Desmarcado (por defecto): las cards y la página de detalle de cada servicio no muestran precio, solo nombre/foto/duración. Márcalo para volver a mostrarlo.",
+      type: "boolean",
+      initialValue: false,
+      group: "servicios",
+    }),
 
     // --- Sucursales -------------------------------------------------------
     defineField({ name: "sucursalesEyebrow", title: "Antetítulo", type: "string", group: "sucursales" }),

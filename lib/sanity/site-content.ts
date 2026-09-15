@@ -26,6 +26,7 @@ const SITE_CONTENT_QUERY = `*[_type == "siteContent"][0]{
   galleryPhotos[]{ image, alt }, galeriaEyebrow, galeriaTitle,
 
   serviciosEyebrow, serviciosTitle, serviciosDescription, serviciosCta,
+  mostrarPrecioServicios,
 
   sucursalesEyebrow,
 
@@ -90,6 +91,7 @@ function mapSiteContent(raw: SiteContentRaw | null): SiteContent {
     serviciosTitle: raw?.serviciosTitle ?? null,
     serviciosDescription: raw?.serviciosDescription ?? null,
     serviciosCta: raw?.serviciosCta ?? null,
+    mostrarPrecioServicios: raw?.mostrarPrecioServicios === true,
 
     sucursalesEyebrow: raw?.sucursalesEyebrow ?? null,
 

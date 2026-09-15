@@ -9,9 +9,15 @@ interface ServiciosPaginadosProps {
   /** Servicios por página. Klipper puede devolver decenas de servicios, así
    * que se paginan para no renderizar una grilla interminable. */
   porPagina?: number;
+  /** Default false — ver siteContent.mostrarPrecioServicios en Sanity. */
+  mostrarPrecio?: boolean;
 }
 
-export default function ServiciosPaginados({ servicios, porPagina = 9 }: ServiciosPaginadosProps) {
+export default function ServiciosPaginados({
+  servicios,
+  porPagina = 9,
+  mostrarPrecio = false,
+}: ServiciosPaginadosProps) {
   const [pagina, setPagina] = useState(0);
 
   const totalPaginas = Math.max(1, Math.ceil(servicios.length / porPagina));
@@ -39,7 +45,7 @@ export default function ServiciosPaginados({ servicios, porPagina = 9 }: Servici
     <div className="mt-12">
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {visibles.map((servicio) => (
-          <ServicioCard key={servicio.slug} servicio={servicio} />
+          <ServicioCard key={servicio.slug} servicio={servicio} mostrarPrecio={mostrarPrecio} />
         ))}
       </div>
 

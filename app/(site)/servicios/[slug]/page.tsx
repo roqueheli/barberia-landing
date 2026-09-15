@@ -6,6 +6,7 @@ import { siteConfig } from "@/data/site";
 import ReservarButton from "@/components/ReservarButton";
 import { getOrganizationContent } from "@/lib/klipper/organization";
 import { getLiveServicioView, liveServicios } from "@/lib/organization-content";
+import { getSiteContent } from "@/lib/sanity/site-content";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -36,7 +37,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!servicio) return {};
 
   const title = servicio.nombre;
-  const description = servicio.descripcionCorta ?? `Desde ${formatCLP(servicio.precioDesde)}`;
+  const description = servicio.descripcionCorta ?? `${servicio.nombre} en ${siteConfig.nombreCorto}`;
 
   return {
     title,
@@ -57,6 +58,8 @@ export default async function ServicioPage({ params }: PageProps) {
   const { slug } = await params;
   const servicio = await getLiveServicioView(slug);
   if (!servicio) notFound();
+  const siteContent = await getSiteContent();
+  const mostrarPrecio = siteContent?.mostrarPrecioServicios ?? false;
 
   return (
     <main id="main-content" className="flex-1">
@@ -97,9 +100,11 @@ export default async function ServicioPage({ params }: PageProps) {
               {servicio.nombre}
             </h1>
             <div className="mt-4 flex items-center gap-4">
-              <span className="text-2xl font-bold text-accent">
-                Desde {formatCLP(servicio.precioDesde)}
-              </span>
+              {mostrarPrecio && (
+                <span className="text-2xl font-bold text-accent">
+                  Desde {formatCLP(servicio.precioDesde)}
+                </span>
+              )}
               <span className="text-sm text-neutral-500">{servicio.duracionMinutos} min</span>
             </div>
 
