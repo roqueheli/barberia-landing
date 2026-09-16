@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getOffers } from "@/lib/klipper/client";
-import { getOrganizationContent } from "@/lib/klipper/organization";
+import { getLandingContent } from "@/lib/klipper/organization";
 import type { Offer } from "@/types/offer";
 
 // Proxy público de las ofertas/promociones de Klipper. El slug NO se toma del
@@ -16,7 +16,7 @@ export const revalidate = 60;
 
 export async function GET(): Promise<NextResponse<Offer[]>> {
   try {
-    const content = await getOrganizationContent();
+    const content = await getLandingContent();
     if (!content) return NextResponse.json([]);
 
     const offers = await getOffers(content.organization.id, { revalidate: 60, tags: ["klipper-offers"] });

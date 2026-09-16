@@ -30,10 +30,14 @@ function getBaseUrl(): string {
   return url.replace(/\/+$/, "");
 }
 
+// Default bajado de 8000 a 3000: medido en producción, landing_by_slug y
+// users_to_appointment responden en 0.6-1.1s de forma estable — 3s ya deja
+// ~3x de margen. Con 8s, un backend colgado retrasaba el TTFB del sitio
+// hasta 16s (las dos llamadas de Klipper son secuenciales).
 function getTimeoutMs(): number {
   const raw = process.env.KLIPPER_API_TIMEOUT_MS;
   const parsed = raw ? Number(raw) : NaN;
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : 8000;
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 3000;
 }
 
 export interface KlipperCacheOptions {

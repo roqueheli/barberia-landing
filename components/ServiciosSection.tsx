@@ -1,5 +1,5 @@
 import ServiciosPaginados from "@/components/ServiciosPaginados";
-import { getOrganizationContent } from "@/lib/klipper/organization";
+import { getLandingContent } from "@/lib/klipper/organization";
 import { liveServicios } from "@/lib/organization-content";
 import { getSiteContent } from "@/lib/sanity/site-content";
 
@@ -9,9 +9,8 @@ const DEFAULT_SERVICIOS_DESCRIPTION = "Haz clic en cualquier servicio para ver e
 const DEFAULT_SERVICIOS_CTA = "Ver la carta completa";
 
 export default async function ServiciosSection() {
-  const content = await getOrganizationContent();
+  const [content, siteContent] = await Promise.all([getLandingContent(), getSiteContent()]);
   const serviciosView = liveServicios(content?.services ?? null);
-  const siteContent = await getSiteContent();
   const serviciosEyebrow = siteContent?.serviciosEyebrow || DEFAULT_SERVICIOS_EYEBROW;
   const serviciosTitle = siteContent?.serviciosTitle || DEFAULT_SERVICIOS_TITLE;
   const serviciosDescription = siteContent?.serviciosDescription || DEFAULT_SERVICIOS_DESCRIPTION;

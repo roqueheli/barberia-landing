@@ -11,7 +11,7 @@ import type { GeoCoords, HorarioDia, Sucursal, Servicio, Barbero } from "@/types
 import type { MarketingBranch, MarketingService, KlipperProfessionalPublic } from "@/types/klipper";
 import type { PriceWithOffer } from "@/types/offer";
 import type { OrganizationContent } from "./klipper/organization";
-import { getOrganizationContent } from "./klipper/organization";
+import { getLandingContent } from "./klipper/organization";
 import { toWhatsAppNumber } from "./whatsapp";
 import { matchByName, normalizeForMatch } from "./match-by-name";
 import { weeklyScheduleToHorario } from "./klipper/schedule";
@@ -422,16 +422,15 @@ export function mergeEquipo(
 // más las creadas 100% en Sanity (sin sucursal real en Klipper detrás, ver
 // lib/sanity/sucursales.ts) al final de la lista.
 export async function getAllSucursalesView(curated: Sucursal[]): Promise<SucursalView[]> {
-  const content = await getOrganizationContent();
+  const [content, sanitySucursales] = await Promise.all([getLandingContent(), getSanitySucursales()]);
   const merged = mergeSucursales(content?.branches ?? null, curated);
-  const sanitySucursales = await getSanitySucursales();
   return [...merged, ...sanitySucursales];
 }
 
 export async function getSucursalView(slug: string, curated: Sucursal[]): Promise<SucursalView | null> {
   const curatedMatch = curated.find((s) => s.slug === slug);
   if (curatedMatch) {
-    const content = await getOrganizationContent();
+    const content = await getLandingContent();
     if (!content) return curatedSucursalView(curatedMatch);
 
     const liveMatch = matchByName(curatedMatch.nombre, curatedMatch.slug, content.branches);
@@ -447,7 +446,7 @@ export async function getServicioView(slug: string, curated: Servicio[]): Promis
   const curatedMatch = curated.find((s) => s.slug === slug);
   if (!curatedMatch) return null;
 
-  const content = await getOrganizationContent();
+  const content = await getLandingContent();
   if (!content) return curatedServicioView(curatedMatch);
 
   const liveMatch = matchByName(curatedMatch.nombre, curatedMatch.slug, content.services);
@@ -455,11 +454,11 @@ export async function getServicioView(slug: string, curated: Servicio[]): Promis
 }
 
 // Resuelve el detalle de un servicio SOLO desde Klipper, por slug, sin volver
-// a consultar la API por id: reusa el landing ya cacheado (getOrganizationContent)
+// a consultar la API por id: reusa el landing ya cacheado (getLandingContent)
 // y busca el servicio cuyo slug determinista coincide. Devuelve null si no
 // hay datos en vivo o el slug no corresponde a ningún servicio de Klipper.
 export async function getLiveServicioView(slug: string): Promise<ServicioView | null> {
-  const content = await getOrganizationContent();
+  const content = await getLandingContent();
   if (!content) return null;
   return liveServicios(content.services).find((s) => s.slug === slug) ?? null;
 }

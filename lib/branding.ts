@@ -8,7 +8,7 @@ import "server-only";
 import { cache } from "react";
 import { siteConfig } from "@/data/site";
 import { getSiteContent } from "@/lib/sanity/site-content";
-import { getOrganizationContent } from "@/lib/klipper/organization";
+import { getLandingContent } from "@/lib/klipper/organization";
 
 export interface Logo {
   url: string | null;
@@ -29,7 +29,7 @@ export interface Branding {
 export const getBranding = cache(async (): Promise<Branding> => {
   const [siteContent, orgContent] = await Promise.all([
     getSiteContent(),
-    getOrganizationContent(),
+    getLandingContent(),
   ]);
 
   const logo: Logo = siteContent?.logoImage

@@ -30,8 +30,10 @@ function tituloSucursales(cantidad: number): string {
 }
 
 export default async function SucursalesSection() {
-  const sucursalesView = await getAllSucursalesView(sucursales);
-  const siteContent = await getSiteContent();
+  const [sucursalesView, siteContent] = await Promise.all([
+    getAllSucursalesView(sucursales),
+    getSiteContent(),
+  ]);
   const sucursalesEyebrow = siteContent?.sucursalesEyebrow || DEFAULT_SUCURSALES_EYEBROW;
 
   return (

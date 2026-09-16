@@ -12,7 +12,7 @@ import OffersPopupLoader from "@/components/offers/OffersPopupLoader";
 import { buildOrganizationJsonLd, buildSucursalJsonLd } from "@/lib/jsonld";
 import { sucursales } from "@/data/sucursales";
 import { siteConfig } from "@/data/site";
-import { getOrganizationContent } from "@/lib/klipper/organization";
+import { getLandingContent } from "@/lib/klipper/organization";
 import { getAllSucursalesView } from "@/lib/organization-content";
 import { getBranding } from "@/lib/branding";
 
@@ -28,9 +28,11 @@ const FAQSection = dynamic(() => import("@/components/FAQSection"));
 export const revalidate = 300;
 
 export default async function Home() {
-  const content = await getOrganizationContent();
-  const sucursalesView = await getAllSucursalesView(sucursales);
-  const { logo, instagramUrl } = await getBranding();
+  const [content, sucursalesView, { logo, instagramUrl }] = await Promise.all([
+    getLandingContent(),
+    getAllSucursalesView(sucursales),
+    getBranding(),
+  ]);
   const organizationName = content?.organization.name ?? siteConfig.nombre;
 
   return (

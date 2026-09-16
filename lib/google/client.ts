@@ -8,7 +8,10 @@ import { cache } from "react";
 import type { GooglePlaceDetailsRaw } from "@/types/google";
 
 const PLACES_API_BASE_URL = "https://places.googleapis.com/v1";
-const TIMEOUT_MS = 8000;
+// Medido en producción: Place Details responde en 0.9-1.1s de forma
+// estable — 3s deja margen real sin dejar que un tercero lento se cuelgue
+// el render (ver AGENTS.md / auditoría de TTFB).
+const TIMEOUT_MS = 3000;
 
 // Field masks separados por propósito — nunca combinar los dos. Verificado
 // contra la documentación oficial de Places API (New): rating/

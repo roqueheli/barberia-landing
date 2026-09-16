@@ -70,12 +70,14 @@ function computeLiveStats(params: {
 }
 
 export default async function Hero() {
-  const content = await getOrganizationContent();
-  const sucursalesView = await getAllSucursalesView(sucursales);
+  const [content, sucursalesView, siteContent] = await Promise.all([
+    getOrganizationContent(),
+    getAllSucursalesView(sucursales),
+    getSiteContent(),
+  ]);
   const sucursalesTexto = sucursalesView.map((s) => s.nombre).join(" · ");
   const equipoView = mergeEquipo(content?.professionals ?? null, equipo);
   const { rating: ratingReal, totalResenas: reseñasReal } = aggregateBranchRatings(sucursalesView);
-  const siteContent = await getSiteContent();
   const heroImage = siteContent?.heroImage ?? DEFAULT_HERO_IMAGE;
   const heroImageAlt =
     siteContent?.heroImageAlt ||

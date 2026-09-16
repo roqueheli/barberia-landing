@@ -22,10 +22,9 @@ function toResena(review: GoogleReview): Resena {
 }
 
 export default async function ResenasSection() {
-  const siteContent = await getSiteContent();
+  const [siteContent, googleReviews] = await Promise.all([getSiteContent(), getBusinessReviews()]);
   const resenasEyebrow = siteContent?.resenasEyebrow || DEFAULT_RESENAS_EYEBROW;
   const resenasTitle = siteContent?.resenasTitle || DEFAULT_RESENAS_TITLE;
-  const googleReviews = await getBusinessReviews();
   const reviewsToShow = googleReviews?.length ? googleReviews.map(toResena) : resenas;
 
   return (

@@ -4,7 +4,7 @@ import { Scissors } from "lucide-react";
 import { notFound } from "next/navigation";
 import { siteConfig } from "@/data/site";
 import ReservarButton from "@/components/ReservarButton";
-import { getOrganizationContent } from "@/lib/klipper/organization";
+import { getLandingContent } from "@/lib/klipper/organization";
 import { getLiveServicioView, liveServicios } from "@/lib/organization-content";
 import { getSiteContent } from "@/lib/sanity/site-content";
 
@@ -27,7 +27,7 @@ export async function generateStaticParams() {
   // Slugs SOLO desde Klipper (mismo esquema determinista que la card de la
   // home). Si Klipper no responde, se prerenderiza vacío y las páginas se
   // resuelven on-demand con dynamicParams (default de Next).
-  const content = await getOrganizationContent();
+  const content = await getLandingContent();
   return liveServicios(content?.services ?? null).map((s) => ({ slug: s.slug }));
 }
 

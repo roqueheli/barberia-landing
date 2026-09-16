@@ -2,16 +2,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/data/site";
 import { sucursales } from "@/data/sucursales";
-import { getOrganizationContent } from "@/lib/klipper/organization";
+import { getLandingContent } from "@/lib/klipper/organization";
 import { getAllSucursalesView, liveServicios } from "@/lib/organization-content";
 import { getBranding } from "@/lib/branding";
 
 export default async function Footer() {
   const year = new Date().getFullYear();
-  const content = await getOrganizationContent();
-  const sucursalesView = await getAllSucursalesView(sucursales);
+  const [content, sucursalesView, { logo, instagramUrl }] = await Promise.all([
+    getLandingContent(),
+    getAllSucursalesView(sucursales),
+    getBranding(),
+  ]);
   const serviciosView = liveServicios(content?.services ?? null);
-  const { logo, instagramUrl } = await getBranding();
 
   return (
     <footer className="border-t border-white/10 bg-background-elevated/40">

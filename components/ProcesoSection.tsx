@@ -8,8 +8,7 @@ const DEFAULT_PROCESO_INSTAGRAM_CTA = "Ver más videos en Instagram →";
 const DEFAULT_VIDEO_TYPE = "video/mp4";
 
 export default async function ProcesoSection() {
-  const siteContent = await getSiteContent();
-  const { instagramUrl } = await getBranding();
+  const [siteContent, { instagramUrl }] = await Promise.all([getSiteContent(), getBranding()]);
   const videoPoster = siteContent?.procesoPosterImage ?? procesoDemo.videoPoster;
   const videoUrl = siteContent?.procesoVideo ?? procesoDemo.videoUrl;
   const videoType = siteContent?.procesoVideo

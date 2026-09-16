@@ -25,6 +25,29 @@
       "service": "better-barber-club"
     }
   ],
+  // Cache incremental (ver open-next.config.ts) — falta crear el bucket antes
+  // del próximo deploy:
+  //   wrangler login   (si no está autenticado)
+  //   wrangler r2 bucket create better-barber-club-cache
+  "r2_buckets": [
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "better-barber-club-cache"
+    }
+  ],
+  // Cola de revalidación en background (Durable Object) que exige el queue
+  // "doQueue" de open-next.config.ts — sin binding, la revalidación por
+  // tiempo (`next:{revalidate}`, usada en todo el sitio) no funciona en
+  // producción. La clase "DOQueueHandler" la genera el build de OpenNext
+  // (.open-next/worker.js), no hay que escribirla a mano.
+  "durable_objects": {
+    "bindings": [
+      { "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" }
+    ]
+  },
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["DOQueueHandler"] }
+  ],
   // Variables de RUNTIME del Worker. Wrangler/OpenNext toman estos `vars` como
   // fuente de verdad al desplegar; las variables cargadas solo en el panel de
   // build NO se propagan al runtime del Worker (por eso process.env.KLIPPER_*
@@ -36,7 +59,7 @@
   "vars": {
     "KLIPPER_API_BASE_URL": "https://klipperapp-be-6fbfe24ddcb3.herokuapp.com/",
     "KLIPPER_ORG_SLUG": "better-barber-club",
-    "KLIPPER_API_TIMEOUT_MS": "8000",
+    "KLIPPER_API_TIMEOUT_MS": "3000",
     "NEXT_PUBLIC_SITE_NAME": "Better Barber Club",
     "NEXT_PUBLIC_SITE_SHORT_NAME": "Better Barber Club",
     "NEXT_PUBLIC_APPOINTMENTS_ENABLED": "true",
