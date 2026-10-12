@@ -65,8 +65,19 @@ export default function BookingModal({
 
   if (!open) return null;
 
+  // status.allowAppointments solo refleja el toggle de la organización en
+  // Klipper — puede seguir en true aunque Klipper ya no tenga NINGUNA
+  // sucursal real cargada (el caso actual: branches=[], solo quedan las
+  // externas de Sanity con agendaUrl). Sin esta condición extra, el wizard
+  // se mostraba igual con el paso "Elige tu sucursal" vacío de opciones
+  // reales y un botón "Continuar" permanentemente deshabilitado.
+  const hasLiveBranches = sucursales.some((s) => s.enVivo);
   const showWizard =
-    APPOINTMENTS_ENABLED && !wizardFailed && !statusLoading && Boolean(status?.allowAppointments);
+    APPOINTMENTS_ENABLED &&
+    !wizardFailed &&
+    !statusLoading &&
+    Boolean(status?.allowAppointments) &&
+    hasLiveBranches;
   // Sin wizard en vivo y sin una sucursal ya fija (ese caso pasa directo por
   // SucursalReservarCta desde la card, sin llegar a este modal): en vez del
   // formulario de WhatsApp, deja elegir la sucursal — mismo comportamiento
