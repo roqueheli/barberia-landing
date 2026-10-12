@@ -3,13 +3,16 @@
 import { useEffect, useRef, useState } from "react";
 import BookingForm from "@/components/BookingForm";
 import BookingWizard from "@/components/BookingWizard/BookingWizard";
+import BookingBranchPicker from "@/components/booking/BookingBranchPicker";
 import type { StatusApiResponse } from "@/app/api/klipper/status/route";
+import type { SucursalView } from "@/lib/organization-content";
 
 interface BookingModalProps {
   open: boolean;
   onClose: () => void;
   sucursalSlugInicial?: string;
   servicioSlugInicial?: string;
+  sucursales: SucursalView[];
 }
 
 // Solo un render condicional en el cliente (wizard vs. WhatsApp), no un
@@ -27,6 +30,7 @@ export default function BookingModal({
   onClose,
   sucursalSlugInicial,
   servicioSlugInicial,
+  sucursales,
 }: BookingModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -63,6 +67,11 @@ export default function BookingModal({
 
   const showWizard =
     APPOINTMENTS_ENABLED && !wizardFailed && !statusLoading && Boolean(status?.allowAppointments);
+  // Sin wizard en vivo y sin una sucursal ya fija (ese caso pasa directo por
+  // SucursalReservarCta desde la card, sin llegar a este modal): en vez del
+  // formulario de WhatsApp, deja elegir la sucursal — mismo comportamiento
+  // de "Reservar" que ya tiene la card (ver BookingBranchPicker).
+  const showBranchPicker = !showWizard && !sucursalSlugInicial && sucursales.length > 0;
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/70 backdrop-blur-sm sm:items-center sm:p-4">
@@ -81,7 +90,9 @@ export default function BookingModal({
             <p className="mt-1 text-sm text-neutral-400">
               {showWizard
                 ? "Elige sucursal, servicio y horario, y confirmamos tu cita al instante."
-                : "Completa tus datos y te confirmamos por WhatsApp en minutos."}
+                : showBranchPicker
+                  ? "Elige la sucursal donde quieres reservar."
+                  : "Completa tus datos y te confirmamos por WhatsApp en minutos."}
             </p>
           </div>
           <button
@@ -111,6 +122,8 @@ export default function BookingModal({
             onSubmitted={onClose}
             onFatalError={() => setWizardFailed(true)}
           />
+        ) : showBranchPicker ? (
+          <BookingBranchPicker sucursales={sucursales} />
         ) : (
           <BookingForm
             sucursalSlugInicial={sucursalSlugInicial}

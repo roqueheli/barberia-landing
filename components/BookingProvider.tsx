@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import BookingModal from "@/components/BookingModal";
+import type { SucursalView } from "@/lib/organization-content";
 
 interface BookingContextValue {
   isOpen: boolean;
@@ -21,7 +22,15 @@ export function useBooking(): BookingContextValue {
   return ctx;
 }
 
-export default function BookingProvider({ children }: { children: React.ReactNode }) {
+interface BookingProviderProps {
+  children: React.ReactNode;
+  /** Resuelto server-side (mismo dato que ya usa SucursalesSection/Footer) y
+   * pasado hacia abajo hasta BookingBranchPicker — evita que el modal tenga
+   * que volver a pedirlo por su cuenta cada vez que se abre. */
+  sucursales: SucursalView[];
+}
+
+export default function BookingProvider({ children, sucursales }: BookingProviderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [sucursalSlugInicial, setSucursalSlugInicial] = useState<string | undefined>(undefined);
   const [servicioSlugInicial, setServicioSlugInicial] = useState<string | undefined>(undefined);
@@ -57,6 +66,7 @@ export default function BookingProvider({ children }: { children: React.ReactNod
         onClose={closeBooking}
         sucursalSlugInicial={sucursalSlugInicial}
         servicioSlugInicial={servicioSlugInicial}
+        sucursales={sucursales}
       />
     </BookingContext.Provider>
   );
