@@ -431,10 +431,19 @@ export async function getSucursalView(slug: string, curated: Sucursal[]): Promis
   const curatedMatch = curated.find((s) => s.slug === slug);
   if (curatedMatch) {
     const content = await getLandingContent();
-    if (!content) return curatedSucursalView(curatedMatch);
+    const liveMatch = content ? matchByName(curatedMatch.nombre, curatedMatch.slug, content.branches) : undefined;
+    if (liveMatch) return mergeOneSucursal(liveMatch, curatedMatch);
 
-    const liveMatch = matchByName(curatedMatch.nombre, curatedMatch.slug, content.branches);
-    return liveMatch ? mergeOneSucursal(liveMatch, curatedMatch) : curatedSucursalView(curatedMatch);
+    // Sin match en vivo de Klipper (branches=[] o Klipper caído): puede
+    // haber una sucursal de Sanity con el mismo slug ya migrada (mismo
+    // caso que getAllSucursalesView) — tiene prioridad sobre el fallback
+    // curado estático, que puede estar desactualizado (nombre largo sin
+    // normalizar, sin agendaUrl) una vez que Klipper deja de tener la
+    // sucursal real detrás.
+    const sanityMatch = (await getSanitySucursales()).find((s) => s.slug === slug);
+    if (sanityMatch) return sanityMatch;
+
+    return curatedSucursalView(curatedMatch);
   }
 
   // Sin match curado: puede ser una sucursal creada 100% en Sanity.

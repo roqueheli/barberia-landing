@@ -181,7 +181,7 @@ export default async function SucursalPage({ params }: PageProps) {
               analyticsSource={`sucursal-detail-${sucursal.slug}`}
               className="mt-2 inline-flex items-center justify-center rounded-full bg-accent px-6 py-3.5 text-sm font-semibold text-accent-foreground transition hover:bg-accent-strong"
             >
-              Reservar en {sucursal.nombre}
+              Reservar hora
             </SucursalReservarCta>
           </aside>
         </div>
